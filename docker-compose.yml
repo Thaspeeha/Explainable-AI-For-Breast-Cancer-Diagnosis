@@ -1,0 +1,11 @@
+services:
+  backend:
+    build:
+      context: ./my-backend
+      dockerfile: Dockerfile
+    container_name: breast-cancer-backend
+    ports:
+      - "8000:8000"   # adjust to your backend port
+    volumes:
+      - ./my-backend:/app
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
