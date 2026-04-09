@@ -76,7 +76,7 @@ export function Sidebar({
             📊
           </div>
           <div>
-            <div className="text-lg font-serif leading-tight">BreastGuard AI</div>
+            <div className="text-lg font-serif leading-tight">Breast Cancer Diagnosis</div>
             <div className="text-[11px] tracking-wide uppercase text-white/80">
               Clinical Decision Support v2.1
             </div>
@@ -87,9 +87,9 @@ export function Sidebar({
       {/* Body */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 text-slate-800 text-sm">
         {/* Patient selection */}
-        <section className="border-b border-slate-200 pb-3">
+        <section className="border-b border-slate-200 pb-3 rounded-lg px-2 py-2 transition-all duration-200 hover:bg-[#F4F9FB] hover:shadow-sm hover:scale-[1.01]">
           <button
-            className="w-full flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-600 mb-2"
+            className="w-full flex items-center justify-between text-[13px] font-semibold tracking-wide text-slate-600 mb-3 text-left"
             onClick={() => toggleSection("patient")}
           >
             <span className="text-[#1A5F7A] text-base">👤</span>
@@ -101,8 +101,8 @@ export function Sidebar({
 
           {openSections.patient && (
             <div className="space-y-1">
-              <div className="text-[11px] font-semibold text-slate-500">
-                Sample case
+              <div className="text-[12px] font-semibold text-slate-500">
+                SAMPLE CASE
               </div>
               <select
                 className="w-full h-9 rounded-md border border-slate-200 bg-white px-2 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1A5F7A]/30"
@@ -123,116 +123,98 @@ export function Sidebar({
                   </option>
                 ))}
               </select>
+              {/* 🔥 Sliders moved HERE */}
+      <div className="space-y-5">
+        {/* Radius */}
+        <div>
+          <div className="text-[12px] font-semibold text-slate-500 mb-1">
+            MEAN RADIUS (mm)
+          </div>
+
+          <Slider
+            value={[radius]}
+            min={6}
+            max={30}
+            step={0.1}
+            onValueChange={(val) => setRadius(val[0])}
+          />
+
+          <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+            <span>6mm</span>
+            <span>30mm</span>
+          </div>
+
+          <div className="flex justify-center mt-2">
+            <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+              {radius.toFixed(1)} mm
+            </span>
+          </div>
+        </div>
+
+        {/* Texture */}
+        <div>
+          <div className="text-[12px] font-semibold text-slate-500 mb-1">
+            TEXTURE SCORE
+          </div>
+
+          <Slider
+            value={[texture]}
+            min={9}
+            max={40}
+            step={0.1}
+            onValueChange={(val) => setTexture(val[0])}
+          />
+
+          <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+            <span>9</span>
+            <span>40</span>
+          </div>
+
+          <div className="flex justify-center mt-2">
+            <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+              {texture.toFixed(1)}
+            </span>
+          </div>
+        </div>
+
+        {/* Concavity */}
+        <div>
+          <div className="text-[12px] font-semibold text-slate-500 mb-1">
+            CONCAVITY SCORE
+          </div>
+
+          <Slider
+            value={[concavity]}
+            min={0}
+            max={0.5}
+            step={0.01}
+            onValueChange={(val) => setConcavity(val[0])}
+          />
+
+          <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+            <span>0.00</span>
+            <span>0.50</span>
+          </div>
+
+          <div className="flex justify-center mt-2">
+            <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+              {concavity.toFixed(2)}
+            </span>
+          </div>
+        </div>
+      </div>
+   
             </div>
+            
           )}
         </section>
 
-        {/* Sliders */}
-        <section className="border-b border-slate-200 pb-3">
-          <button
-            className="w-full flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-600 mb-2"
-            onClick={() => toggleSection("sliders")}
-          >
-            <span className="text-[#1A5F7A] text-base">📏</span>
-            <span className="flex-1 uppercase">Key diagnostic features</span>
-            <span className="text-xs text-slate-400">
-              {openSections.sliders ? "▾" : "▸"}
-            </span>
-          </button>
-
-          {openSections.sliders && (
-  <div className="space-y-5">
-    {/* Radius */}
-    <div>
-      <div className="text-[11px] font-semibold text-slate-500 mb-1">
-        Mean radius (mm)
-      </div>
-
-      <Slider
-        value={[radius]}
-        min={6}
-        max={30}
-        step={0.1}
-        onValueChange={(val) => setRadius(val[0])}
-      />
-
-      <div className="flex justify-between text-[10px] text-slate-400 mt-1">
-        <span>6mm</span>
-        <span>30mm</span>
-      </div>
-
-      <div className="flex justify-center mt-2">
-        <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
-          {radius.toFixed(1)} mm
-        </span>
-      </div>
-    </div>
-
-    {/* Texture */}
-    <div>
-      <div className="text-[11px] font-semibold text-slate-500 mb-1">
-        Texture score
-      </div>
-
-      <Slider
-        value={[texture]}
-        min={9}
-        max={40}
-        step={0.1}
-        onValueChange={(val) => setTexture(val[0])}
-      />
-
-      <div className="flex justify-between text-[10px] text-slate-400 mt-1">
-        <span>9</span>
-        <span>40</span>
-      </div>
-
-      <div className="flex justify-center mt-2">
-        <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
-          {texture.toFixed(1)}
-        </span>
-      </div>
-    </div>
-
-    {/* Concavity */}
-    <div>
-      <div className="text-[11px] font-semibold text-slate-500 mb-1">
-        Concavity score
-      </div>
-
-      <Slider
-        value={[concavity]}
-        min={0}
-        max={0.5}
-        step={0.01}
-        onValueChange={(val) => setConcavity(val[0])}
-      />
-
-      <div className="flex justify-between text-[10px] text-slate-400 mt-1">
-        <span>0.00</span>
-        <span>0.50</span>
-      </div>
-
-      <div className="flex justify-center mt-2">
-        <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
-          {concavity.toFixed(2)}
-        </span>
-      </div>
-    </div>
-
-    {/* Toggle */}
-    <label className="mt-1 flex items-center gap-2 text-xs text-slate-600">
-      <input type="checkbox" className="h-3 w-3" />
-      <span>Show comparison baseline</span>
-    </label>
-  </div>
-)}
-        </section>
+        
 
         {/* Explanation mode */}
-        <section className="border-b border-slate-200 pb-3">
+        <section className="border-b border-slate-200 pb-3 rounded-lg px-2 py-2 transition-all duration-200 hover:bg-[#F4F9FB] hover:shadow-sm hover:scale-[1.01]">
           <button
-            className="w-full flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-600 mb-2"
+            className="w-full flex items-center justify-between text-[13px] font-semibold tracking-wide text-slate-600 mb-2 text-left"
             onClick={() => toggleSection("mode")}
           >
             <span className="text-[#1A5F7A] text-base">🔍</span>
@@ -260,7 +242,7 @@ export function Sidebar({
                     <div className="text-xs font-semibold text-slate-800">
                       {opt.label}
                     </div>
-                    <div className="text-[11px] text-slate-500">{opt.desc}</div>
+                    <div className="text-[13px] text-slate-500">{opt.desc}</div>
                   </button>
                 );
               })}
@@ -269,9 +251,9 @@ export function Sidebar({
         </section>
 
         {/* Clinical ranges */}
-        <section className="border-b border-slate-200 pb-3">
+        <section className="border-b border-slate-200 pb-3 rounded-lg px-2 py-2 transition-all duration-200 hover:bg-[#F4F9FB] hover:shadow-sm hover:scale-[1.01]">
           <button
-            className="w-full flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-600 mb-2"
+            className="w-full flex items-center justify-between text-[13px] font-semibold tracking-wide text-slate-600 mb-2 text-left"
             onClick={() => toggleSection("ranges")}
           >
             <span className="text-[#1A5F7A] text-base">📎</span>
@@ -282,21 +264,21 @@ export function Sidebar({
           </button>
 
           {openSections.ranges && (
-            <div className="space-y-2 text-[11px]">
+            <div className="space-y-2 text-[12px]">
               <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2">
-                <div className="font-semibold text-[#1A5F7A]">Radius</div>
+                <div className="font-semibold text-[#1A5F7A]">RADIUS MEAN</div>
                 <div className="text-slate-700">
                   6–14mm (benign) · 11–28mm (malignant)
                 </div>
               </div>
               <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2">
-                <div className="font-semibold text-[#1A5F7A]">Texture</div>
+                <div className="font-semibold text-[#1A5F7A]">TEXTURE SCORE</div>
                 <div className="text-slate-700">
                   9–21 (benign) · 14–40 (malignant)
                 </div>
               </div>
               <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2">
-                <div className="font-semibold text-[#1A5F7A]">Concavity</div>
+                <div className="font-semibold text-[#1A5F7A]">CONCATIVITY</div>
                 <div className="text-slate-700">
                   0–0.13 (benign) · 0.07–0.43 (malignant)
                 </div>
@@ -306,9 +288,9 @@ export function Sidebar({
         </section>
 
         {/* Model info */}
-        <section className="pb-4">
+        <section className="border-b border-slate-200 pb-3 rounded-lg px-2 py-2 transition-all duration-200 hover:bg-[#F4F9FB] hover:shadow-sm hover:scale-[1.01]">
           <button
-            className="w-full flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-600 mb-2"
+            className="w-full flex items-center justify-between text-[13px] font-semibold tracking-wide text-slate-600 mb-2 text-left"
             onClick={() => toggleSection("model")}
           >
             <span className="text-[#1A5F7A] text-base">📄</span>
