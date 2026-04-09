@@ -2,6 +2,7 @@
 
 import { PatientCase } from "@/lib/mockData";
 import { useState } from "react";
+import { Slider } from "./slider";
 
 interface SidebarProps {
   patientCases: PatientCase[];
@@ -88,7 +89,7 @@ export function Sidebar({
         {/* Patient selection */}
         <section className="border-b border-slate-200 pb-3">
           <button
-            className="w-full flex items-center gap-2 text-[11px] font-semibold tracking-wide text-slate-600 mb-2"
+            className="w-full flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-600 mb-2"
             onClick={() => toggleSection("patient")}
           >
             <span className="text-[#1A5F7A] text-base">👤</span>
@@ -129,7 +130,7 @@ export function Sidebar({
         {/* Sliders */}
         <section className="border-b border-slate-200 pb-3">
           <button
-            className="w-full flex items-center gap-2 text-[11px] font-semibold tracking-wide text-slate-600 mb-2"
+            className="w-full flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-600 mb-2"
             onClick={() => toggleSection("sliders")}
           >
             <span className="text-[#1A5F7A] text-base">📏</span>
@@ -140,89 +141,98 @@ export function Sidebar({
           </button>
 
           {openSections.sliders && (
-            <div className="space-y-4">
-              {/* Radius */}
-              <div>
-                <div className="text-[11px] font-semibold text-slate-500">
-                  Mean radius (mm)
-                </div>
-                <input
-                  type="range"
-                  min={6}
-                  max={30}
-                  step={0.1}
-                  value={radius}
-                  onChange={(e) => setRadius(parseFloat(e.target.value))}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-[10px] text-slate-400">
-                  <span>6mm</span>
-                  <span>30mm</span>
-                </div>
-                <div className="inline-flex px-3 py-1 rounded-full bg-[#EAF4F8] text-xs font-semibold text-[#1A5F7A] mt-1">
-                  {radius.toFixed(2)} mm
-                </div>
-              </div>
+  <div className="space-y-5">
+    {/* Radius */}
+    <div>
+      <div className="text-[11px] font-semibold text-slate-500 mb-1">
+        Mean radius (mm)
+      </div>
 
-              {/* Texture */}
-              <div>
-                <div className="text-[11px] font-semibold text-slate-500">
-                  Texture score
-                </div>
-                <input
-                  type="range"
-                  min={9}
-                  max={40}
-                  step={0.1}
-                  value={texture}
-                  onChange={(e) => setTexture(parseFloat(e.target.value))}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-[10px] text-slate-400">
-                  <span>9</span>
-                  <span>40</span>
-                </div>
-                <div className="inline-flex px-3 py-1 rounded-full bg-[#EAF4F8] text-xs font-semibold text-[#1A5F7A] mt-1">
-                  {texture.toFixed(2)}
-                </div>
-              </div>
+      <Slider
+        value={[radius]}
+        min={6}
+        max={30}
+        step={0.1}
+        onValueChange={(val) => setRadius(val[0])}
+      />
 
-              {/* Concavity */}
-              <div>
-                <div className="text-[11px] font-semibold text-slate-500">
-                  Concavity score
-                </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={0.5}
-                  step={0.01}
-                  value={concavity}
-                  onChange={(e) => setConcavity(parseFloat(e.target.value))}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-[10px] text-slate-400">
-                  <span>0.00</span>
-                  <span>0.50</span>
-                </div>
-                <div className="inline-flex px-3 py-1 rounded-full bg-[#EAF4F8] text-xs font-semibold text-[#1A5F7A] mt-1">
-                  {concavity.toFixed(2)}
-                </div>
-              </div>
+      <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+        <span>6mm</span>
+        <span>30mm</span>
+      </div>
 
-              {/* Comparison toggle */}
-              <label className="mt-1 flex items-center gap-2 text-xs text-slate-600">
-                <input type="checkbox" className="h-3 w-3" />
-                <span>Show comparison baseline</span>
-              </label>
-            </div>
-          )}
+      <div className="flex justify-center mt-2">
+        <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+          {radius.toFixed(1)} mm
+        </span>
+      </div>
+    </div>
+
+    {/* Texture */}
+    <div>
+      <div className="text-[11px] font-semibold text-slate-500 mb-1">
+        Texture score
+      </div>
+
+      <Slider
+        value={[texture]}
+        min={9}
+        max={40}
+        step={0.1}
+        onValueChange={(val) => setTexture(val[0])}
+      />
+
+      <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+        <span>9</span>
+        <span>40</span>
+      </div>
+
+      <div className="flex justify-center mt-2">
+        <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+          {texture.toFixed(1)}
+        </span>
+      </div>
+    </div>
+
+    {/* Concavity */}
+    <div>
+      <div className="text-[11px] font-semibold text-slate-500 mb-1">
+        Concavity score
+      </div>
+
+      <Slider
+        value={[concavity]}
+        min={0}
+        max={0.5}
+        step={0.01}
+        onValueChange={(val) => setConcavity(val[0])}
+      />
+
+      <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+        <span>0.00</span>
+        <span>0.50</span>
+      </div>
+
+      <div className="flex justify-center mt-2">
+        <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+          {concavity.toFixed(2)}
+        </span>
+      </div>
+    </div>
+
+    {/* Toggle */}
+    <label className="mt-1 flex items-center gap-2 text-xs text-slate-600">
+      <input type="checkbox" className="h-3 w-3" />
+      <span>Show comparison baseline</span>
+    </label>
+  </div>
+)}
         </section>
 
         {/* Explanation mode */}
         <section className="border-b border-slate-200 pb-3">
           <button
-            className="w-full flex items-center gap-2 text-[11px] font-semibold tracking-wide text-slate-600 mb-2"
+            className="w-full flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-600 mb-2"
             onClick={() => toggleSection("mode")}
           >
             <span className="text-[#1A5F7A] text-base">🔍</span>
@@ -261,7 +271,7 @@ export function Sidebar({
         {/* Clinical ranges */}
         <section className="border-b border-slate-200 pb-3">
           <button
-            className="w-full flex items-center gap-2 text-[11px] font-semibold tracking-wide text-slate-600 mb-2"
+            className="w-full flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-600 mb-2"
             onClick={() => toggleSection("ranges")}
           >
             <span className="text-[#1A5F7A] text-base">📎</span>
@@ -298,7 +308,7 @@ export function Sidebar({
         {/* Model info */}
         <section className="pb-4">
           <button
-            className="w-full flex items-center gap-2 text-[11px] font-semibold tracking-wide text-slate-600 mb-2"
+            className="w-full flex items-center gap-2 text-[13px] font-semibold tracking-wide text-slate-600 mb-2"
             onClick={() => toggleSection("model")}
           >
             <span className="text-[#1A5F7A] text-base">📄</span>
