@@ -4,10 +4,48 @@
 import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/ui/sidebar";
 import { mockPatientCases, PatientCase } from "@/lib/mockData";
+import PredictionDashboard from "@/components/ui/prediction-dashboard";
+import TopNav, { TabType } from "@/components/ui/top-nav";
 
-interface PredictionResponse {
-  prediction: string;
-  explanation: string;
+export interface Bar {
+  feature: string;
+  value: number;
+  direction: "toward_malignant" | "toward_benign";
+  percent: number;
+  rank : number;
+  observed: number;
+  ranges: {
+    benign_min: number | null;
+    benign_max: number | null;
+    malignant_min: number | null;
+    malignant_max: number | null;
+  };
+  risk_color: "red" | "green" | "yellow";
+  plain_text: string;
+}
+
+export interface Mode1Card {
+  feature: string;
+  direction_label: string;
+  impact_percent: number;
+  plain_text: string;
+  observed: number;
+  ranges: {
+    benign_min: number | null;
+    benign_max: number | null;
+    malignant_min: number | null;
+    malignant_max: number | null;
+  };
+  risk_color: "red" | "green" | "yellow";
+}
+
+ export interface PredictionResponse {
+  prediction_label: string;
+  malignant_probability: number;
+  benign_probability: number;
+  mode1: { cards: Mode1Card[] };
+  mode2: { bars: Bar[]; bullets: string[] };
+  mode3: { bars: Bar[]; summary: string };
 }
 
 export default function Home(): JSX.Element {
@@ -26,6 +64,7 @@ export default function Home(): JSX.Element {
   const [result, setResult] = useState<PredictionResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<TabType>("prediction");
 
   // Call backend when patient or feature sliders change
   useEffect(() => {
@@ -88,26 +127,47 @@ export default function Home(): JSX.Element {
         setExplanationMode={setExplanationMode}
       />
 
-      <main className="flex-1 bg-gray-50 flex flex-col items-center justify-center text-gray-800 p-6 space-y-4">
+      <main className="flex-1 bg-gray-50 flex flex-col text-gray-800 p-6 space-y-4 overflow-y-auto">
+        
+        {/* 🔝 TOP NAV */}
+  <TopNav activeTab={activeTab} onTabChange={setActiveTab} />
+
+         {/* 📄 CONTENT */}
+  
+        
         {loading && <p className="text-gray-500">Running model...</p>}
-        {error && (
-          <p className="text-red-500">
-            {error}
-          </p>
-        )}
+        {error && <p className="text-red-500">{error}</p>}
+        
+        
         {result && (
-          <div className="max-w-xl w-full bg-white shadow rounded-lg p-4 space-y-2">
+          <div className="w-full bg-white shadow rounded-lg p-4 space-y-4">
             <h2 className="text-lg font-semibold">
-              Model prediction
+              Prediction: {result.prediction_label}
             </h2>
             <p>
-              Prediction: <span className="font-medium">{result.prediction}</span>
+              Malignant probability:{" "}
+              {(result.malignant_probability * 100).toFixed(1)}%
             </p>
-            <p className="text-sm text-gray-600">
-              Explanation: {result.explanation}
+            <p>
+              Benign probability:{" "}
+              {(result.benign_probability * 100).toFixed(1)}%
             </p>
+
+            <PredictionDashboard result={result} explanationMode = {explanationMode} />
           </div>
         )}
+          {/* 🚧 Placeholder for other tabs */}
+     {activeTab === "features" && (
+      <div className="bg-white p-6 rounded-lg shadow">
+        Feature Importance UI here
+      </div>
+    )}
+
+    {activeTab === "confidence" && (
+      <div className="bg-white p-6 rounded-lg shadow">
+        Model Confidence UI here
+      </div>
+    )}
         {!loading && !error && !result && (
           <p className="text-gray-400">
             Adjust patient features in the sidebar to get a prediction.
