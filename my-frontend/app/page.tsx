@@ -6,6 +6,8 @@ import { Sidebar } from "@/components/ui/sidebar";
 import { mockPatientCases, PatientCase } from "@/lib/mockData";
 import PredictionDashboard from "@/components/ui/prediction-dashboard";
 import TopNav, { TabType } from "@/components/ui/top-nav";
+import FeatureImportanceTab from "@/components/ui/feature-importance";
+import ModelConfidenceTab from "@/components/ui/model-confidence";
 
 export interface Bar {
   feature: string;
@@ -39,6 +41,22 @@ export interface Mode1Card {
   risk_color: "red" | "green" | "yellow";
 }
 
+export interface GlobalFeatureImportance {
+  feature: string;
+  importance: number; // normalized 0–1
+  group: "mean" | "worst" | "se"; // for filters
+  rank: number;
+}
+
+export interface ModelMetrics {
+  accuracy: number;
+  sensitivity: number;
+  specificity: number;
+  auc_roc: number;
+  brier_score: number;
+  false_negative_rate: number;
+}
+
  export interface PredictionResponse {
   prediction_label: string;
   malignant_probability: number;
@@ -59,7 +77,7 @@ export default function Home(): JSX.Element {
     selectedPatient.features.concavity
   );
   const [explanationMode, setExplanationMode] = useState("Text Summary");
-
+   
   // NEW: backend call state
   const [result, setResult] = useState<PredictionResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -94,6 +112,15 @@ export default function Home(): JSX.Element {
         }
 
         const data: PredictionResponse = await res.json();
+        console.log("API response", {
+  radius,
+  texture,
+  concavity,
+  prediction_label: data.prediction_label,
+  malignant: data.malignant_probability,
+  benign: data.benign_probability,
+  mode1FirstCard: data.mode1.cards[0],
+});
         setResult(data);
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : "Failed to call backend");
@@ -105,7 +132,18 @@ export default function Home(): JSX.Element {
 
     callBackend();
   }, [radius, texture, concavity, explanationMode, selectedPatient]);
-
+  const globalImportances: GlobalFeatureImportance[] = [
+  { feature: "mean radius", importance: 0.18, group: "mean", rank: 1 },
+  // ... up to 15 features
+ ];
+   const modelMetrics: ModelMetrics = {
+  accuracy: 97.4,
+  sensitivity: 97.1,
+  specificity: 97.6,
+  auc_roc: 0.996,
+  brier_score: 0.024,
+  false_negative_rate: 2.9,
+};
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar
@@ -126,6 +164,7 @@ export default function Home(): JSX.Element {
         explanationMode={explanationMode}
         setExplanationMode={setExplanationMode}
       />
+      
 
       <main className="flex-1 bg-gray-50 flex flex-col text-gray-800 p-6 space-y-4 overflow-y-auto">
         
@@ -139,8 +178,9 @@ export default function Home(): JSX.Element {
         {error && <p className="text-red-500">{error}</p>}
         
         
-        {result && (
-          <div className="w-full bg-white shadow rounded-lg p-4 space-y-4">
+        {/* PREDICTION DASHBOARD TAB */}
+      {result && activeTab === "prediction" && (
+        <div className="w-full bg-white shadow rounded-lg p-4 space-y-4">
             <h2 className="text-lg font-semibold">
               Prediction: {result.prediction_label}
             </h2>
@@ -156,16 +196,20 @@ export default function Home(): JSX.Element {
             <PredictionDashboard result={result} explanationMode = {explanationMode} />
           </div>
         )}
-          {/* 🚧 Placeholder for other tabs */}
+      {/* FEATURE IMPORTANCE TAB */}   
      {activeTab === "features" && (
       <div className="bg-white p-6 rounded-lg shadow">
-        Feature Importance UI here
+        <FeatureImportanceTab importances={globalImportances} />
       </div>
     )}
-
+     {/* MODEL CONFIDENCE TAB */}
     {activeTab === "confidence" && (
       <div className="bg-white p-6 rounded-lg shadow">
-        Model Confidence UI here
+         <ModelConfidenceTab
+          result={result as PredictionResponse} // safe to assert since this tab should only be visible when result is available
+          metrics={modelMetrics}
+          treeConsensusPct={93}
+        />
       </div>
     )}
         {!loading && !error && !result && (

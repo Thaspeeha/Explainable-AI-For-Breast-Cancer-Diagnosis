@@ -39,7 +39,7 @@ export default function PredictionDashboard({ result, explanationMode }: Props) 
       : "BI-RADS 3–4A: Probably benign / low suspicion; correlate clinically";
 
   // Features analyzed count (Mode 3 bars length)
-  const featuresAnalyzed = result.mode3.bars.length;
+  const featuresAnalyzed = result.mode3?.bars?.length ?? 0;
 
   // For metric cards, pull radius/concavity from top features if present
   const radiusBar = result.mode3.bars.find((b) => b.feature === "mean radius");

@@ -34,6 +34,7 @@ model = tf.keras.models.load_model("bc_nn_model.keras")
 scaler = joblib.load("scaler.pkl")
 feature_names = np.load("feature_names.npy", allow_pickle=True)
 global_importance = np.load("global_importance.npy", allow_pickle=True).tolist()
+benign_baseline = np.load("benign_baseline.npy")
 
 # True SHAP references (precomputed offline)
 X_ref = np.load("shap_X_ref.npy")            # (N_ref, 30) raw features
@@ -162,7 +163,8 @@ def build_payload_for_single(x_raw: np.ndarray) -> Dict[str, Any]:
     """
     benign_prob = predict_proba_single(x_raw)
     malignant_prob = 1.0 - benign_prob
-    prediction_label = "BENIGN" if benign_prob >= 0.5 else "MALIGNANT"
+    benign_threshold = 0.4
+    prediction_label = "BENIGN" if benign_prob >= benign_threshold else "MALIGNANT"
 
     shap_vec = nearest_shap_vector(x_raw)
     bars_data = build_mode_bars(x_raw, shap_vec, k=10)
@@ -253,7 +255,8 @@ class GlobalFeature(BaseModel):
 @app.post("/predict", response_model=PredictResponse)
 def predict(req: PredictRequest):
     # Start from a neutral baseline (zeros).
-    x_raw = np.zeros(len(feature_names), dtype=float)
+    x_raw = x_raw = benign_baseline.copy()
+
 
     x_raw[IDX_RADIUS] = req.radius
     x_raw[IDX_TEXTURE] = req.texture

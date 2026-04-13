@@ -76,7 +76,7 @@ export function Sidebar({
             📊
           </div>
           <div>
-            <div className="text-lg font-serif leading-tight">Breast Cancer Diagnosis</div>
+            <div className="text-lg font-serif leading-tight">Explainable AI For Breast Cancer Diagnosis</div>
             <div className="text-[11px] tracking-wide uppercase text-white/80">
               Clinical Decision Support v2.1
             </div>
