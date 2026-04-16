@@ -1,33 +1,55 @@
 "use client";
 
-import { PatientCase } from "@/lib/mockData";
+//import { PatientCase } from "@/lib/mockData";
 import { useState } from "react";
 import { Slider } from "./slider";
 
 interface SidebarProps {
-  patientCases: PatientCase[];
-  selectedPatient: PatientCase;
-  setSelectedPatient: (p: PatientCase) => void;
-  radius: number;
+    radius: number;
   setRadius: (v: number) => void;
   texture: number;
   setTexture: (v: number) => void;
   concavity: number;
   setConcavity: (v: number) => void;
+  meanPerimeter: number;
+  setMeanPerimeter: (v: number) => void;
+  meanConcavePoints: number;
+  setMeanConcavePoints: (v: number) => void;
+  worstRadius: number;
+  setWorstRadius: (v: number) => void;
+  worstPerimeter: number;
+  setWorstPerimeter: (v: number) => void;
+  worstArea: number;
+  setWorstArea: (v: number) => void;
+  worstConcavePoints: number;
+  setWorstConcavePoints: (v: number) => void;
+  worstConcavity: number;
+  setWorstConcavity: (v: number) => void;
   explanationMode: string;
   setExplanationMode: (v: string) => void;
 }
 
 export function Sidebar({
-  patientCases,
-  selectedPatient,
-  setSelectedPatient,
   radius,
   setRadius,
   texture,
   setTexture,
   concavity,
   setConcavity,
+  meanPerimeter,
+  setMeanPerimeter,
+  meanConcavePoints,
+  setMeanConcavePoints,
+  worstRadius,
+  setWorstRadius,
+  worstPerimeter,
+  setWorstPerimeter,
+  worstArea,
+  setWorstArea,
+  worstConcavePoints,
+  setWorstConcavePoints,
+  worstConcavity,
+  setWorstConcavity,
   explanationMode,
   setExplanationMode,
 }: SidebarProps) {
@@ -93,7 +115,7 @@ export function Sidebar({
             onClick={() => toggleSection("patient")}
           >
             <span className="text-[#1A5F7A] text-base">👤</span>
-            <span className="flex-1 uppercase">Patient selection</span>
+            <span className="flex-1 uppercase">Patient input</span>
             <span className="text-xs text-slate-400">
               {openSections.patient ? "▾" : "▸"}
             </span>
@@ -102,27 +124,9 @@ export function Sidebar({
           {openSections.patient && (
             <div className="space-y-1">
               <div className="text-[12px] font-semibold text-slate-500">
-                SAMPLE CASE
+                Adjust sliders to match your patient; see Clinical ranges below for example benign/malignant values.
               </div>
-              <select
-                className="w-full h-9 rounded-md border border-slate-200 bg-white px-2 text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1A5F7A]/30"
-                value={selectedPatient.id}
-                onChange={(e) => {
-                  const found = patientCases.find((p) => p.id === e.target.value);
-                  if (found) {
-                    setSelectedPatient(found);
-                    setRadius(found.features.radius);
-                    setTexture(found.features.texture);
-                    setConcavity(found.features.concavity);
-                  }
-                }}
-              >
-                {patientCases.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name} — {p.risk}
-                  </option>
-                ))}
-              </select>
+              
               {/* 🔥 Sliders moved HERE */}
       <div className="space-y-5">
         {/* Radius */}
@@ -202,6 +206,165 @@ export function Sidebar({
             </span>
           </div>
         </div>
+        {/* MEAN PERIMETER */}
+<div>
+  <div className="text-[12px] font-semibold text-slate-500 mb-1">
+    MEAN PERIMETER
+  </div>
+  <Slider
+    value={[meanPerimeter]}
+    min={40}
+    max={200}
+    step={1}
+    onValueChange={(val) => setMeanPerimeter(val[0])}
+  />
+  <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+    <span>40</span>
+    <span>200</span>
+  </div>
+  <div className="flex justify-center mt-2">
+    <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+      {meanPerimeter.toFixed(0)}
+    </span>
+  </div>
+</div>
+{/* MEAN CONCAVE POINTS */}
+<div>
+  <div className="text-[12px] font-semibold text-slate-500 mb-1">
+    MEAN CONCAVE POINTS
+  </div>
+  <Slider
+    value={[meanConcavePoints]}
+    min={0}
+    max={0.3}
+    step={0.005}
+    onValueChange={(val) => setMeanConcavePoints(val[0])}
+  />
+  <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+    <span>0.00</span>
+    <span>0.30</span>
+  </div>
+  <div className="flex justify-center mt-2">
+    <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+      {meanConcavePoints.toFixed(3)}
+    </span>
+  </div>
+</div>
+
+{/* WORST RADIUS */}
+<div>
+  <div className="text-[12px] font-semibold text-slate-500 mb-1">
+    WORST RADIUS (mm)
+  </div>
+  <Slider
+    value={[worstRadius]}
+    min={10}
+    max={40}
+    step={0.5}
+    onValueChange={(val) => setWorstRadius(val[0])}
+  />
+  <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+    <span>10mm</span>
+    <span>40mm</span>
+  </div>
+  <div className="flex justify-center mt-2">
+    <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+      {worstRadius.toFixed(1)} mm
+    </span>
+  </div>
+</div>
+
+{/* WORST PERIMETER */}
+<div>
+  <div className="text-[12px] font-semibold text-slate-500 mb-1">
+    WORST PERIMETER
+  </div>
+  <Slider
+    value={[worstPerimeter]}
+    min={50}
+    max={300}
+    step={2}
+    onValueChange={(val) => setWorstPerimeter(val[0])}
+  />
+  <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+    <span>50</span>
+    <span>300</span>
+  </div>
+  <div className="flex justify-center mt-2">
+    <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+      {worstPerimeter.toFixed(0)}
+    </span>
+  </div>
+</div>
+
+{/* WORST AREA */}
+<div>
+  <div className="text-[12px] font-semibold text-slate-500 mb-1">
+    WORST AREA
+  </div>
+  <Slider
+    value={[worstArea]}
+    min={200}
+    max={2500}
+    step={10}
+    onValueChange={(val) => setWorstArea(val[0])}
+  />
+  <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+    <span>200</span>
+    <span>2500</span>
+  </div>
+  <div className="flex justify-center mt-2">
+    <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+      {worstArea.toFixed(0)}
+    </span>
+  </div>
+</div>
+
+{/* WORST CONCAVE POINTS */}
+<div>
+  <div className="text-[12px] font-semibold text-slate-500 mb-1">
+    WORST CONCAVE POINTS
+  </div>
+  <Slider
+    value={[worstConcavePoints]}
+    min={0}
+    max={0.5}
+    step={0.01}
+    onValueChange={(val) => setWorstConcavePoints(val[0])}
+  />
+  <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+    <span>0.00</span>
+    <span>0.50</span>
+  </div>
+  <div className="flex justify-center mt-2">
+    <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+      {worstConcavePoints.toFixed(2)}
+    </span>
+  </div>
+</div>
+
+{/* WORST CONCAVITY */}
+<div>
+  <div className="text-[12px] font-semibold text-slate-500 mb-1">
+    WORST CONCAVITY
+  </div>
+  <Slider
+    value={[worstConcavity]}
+    min={0}
+    max={0.6}
+    step={0.01}
+    onValueChange={(val) => setWorstConcavity(val[0])}
+  />
+  <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+    <span>0.00</span>
+    <span>0.60</span>
+  </div>
+  <div className="flex justify-center mt-2">
+    <span className="px-3 py-1 rounded-lg bg-[#EAF4F8] text-[#1A5F7A] text-xs font-semibold">
+      {worstConcavity.toFixed(2)}
+    </span>
+  </div>
+</div>
       </div>
    
             </div>

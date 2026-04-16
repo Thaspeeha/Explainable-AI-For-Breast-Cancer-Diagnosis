@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { PredictionResponse } from "@/app/page";
 
 export default function Mode2({ result }: { result: PredictionResponse }) {
-  const bars = result.mode2.bars.slice(0, 5);
+  const bars = result.mode2.bars.slice(0, 6);
   const bullets = result.mode2.bullets;
 
   return (

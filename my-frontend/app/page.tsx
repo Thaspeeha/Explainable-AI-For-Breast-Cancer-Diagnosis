@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/ui/sidebar";
-import { mockPatientCases, PatientCase } from "@/lib/mockData";
+//import { mockPatientCases, PatientCase } from "@/lib/mockData";
 import PredictionDashboard from "@/components/ui/prediction-dashboard";
 import TopNav, { TabType } from "@/components/ui/top-nav";
 import FeatureImportanceTab from "@/components/ui/feature-importance";
@@ -66,16 +66,22 @@ export interface ModelMetrics {
   mode3: { bars: Bar[]; summary: string };
 }
 
-export default function Home(): JSX.Element {
-  const [selectedPatient, setSelectedPatient] = useState<PatientCase>(
-    mockPatientCases[0]
-  );
 
-  const [radius, setRadius] = useState(selectedPatient.features.radius);
-  const [texture, setTexture] = useState(selectedPatient.features.texture);
-  const [concavity, setConcavity] = useState(
-    selectedPatient.features.concavity
-  );
+export default function Home(): JSX.Element {
+  //const [selectedPatient, setSelectedPatient] = useState<PatientCase>(
+    //mockPatientCases[0]
+  //);
+
+  const [radius, setRadius] = useState(10);
+  const [texture, setTexture] = useState(15);
+  const [concavity, setConcavity] = useState(0.05);
+  const [meanPerimeter, setMeanPerimeter] = useState(80);
+ const [meanConcavePoints, setMeanConcavePoints] = useState(0.05);
+ const [worstRadius, setWorstRadius] = useState(20);
+ const [worstPerimeter, setWorstPerimeter] = useState(130);
+ const [worstArea, setWorstArea] = useState(900);
+const [worstConcavePoints, setWorstConcavePoints] = useState(0.2);
+const [worstConcavity, setWorstConcavity] = useState(0.3);
   const [explanationMode, setExplanationMode] = useState("Text Summary");
    
   // NEW: backend call state
@@ -101,7 +107,13 @@ export default function Home(): JSX.Element {
               radius,
               texture,
               concavity,
-              patientId: selectedPatient.id,
+                mean_perimeter: meanPerimeter,
+                mean_concave_points: meanConcavePoints,
+               worst_radius: worstRadius,
+  worst_perimeter: worstPerimeter,
+  worst_area: worstArea,
+  worst_concave_points: worstConcavePoints,
+  worst_concavity: worstConcavity,
               explanationMode,
             }),
           }
@@ -116,6 +128,13 @@ export default function Home(): JSX.Element {
   radius,
   texture,
   concavity,
+  meanPerimeter,
+  meanConcavePoints,
+  worstRadius,
+  worstPerimeter,
+  worstArea,
+  worstConcavePoints,
+  worstConcavity,
   prediction_label: data.prediction_label,
   malignant: data.malignant_probability,
   benign: data.benign_probability,
@@ -131,11 +150,14 @@ export default function Home(): JSX.Element {
     };
 
     callBackend();
-  }, [radius, texture, concavity, explanationMode, selectedPatient]);
-  const globalImportances: GlobalFeatureImportance[] = [
-  { feature: "mean radius", importance: 0.18, group: "mean", rank: 1 },
-  // ... up to 15 features
- ];
+  }, [radius, texture, concavity,meanPerimeter,
+  meanConcavePoints,
+  worstRadius,
+  worstPerimeter,
+  worstArea,
+  worstConcavePoints,
+  worstConcavity, explanationMode]);
+  
    const modelMetrics: ModelMetrics = {
   accuracy: 97.4,
   sensitivity: 97.1,
@@ -144,23 +166,52 @@ export default function Home(): JSX.Element {
   brier_score: 0.024,
   false_negative_rate: 2.9,
 };
+const [globalImportances, setGlobalImportances] = useState<GlobalFeatureImportance[]>([]);
+
+useEffect(() => {
+  const loadGlobalImportance = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/global_importance`);
+      if (!res.ok) throw new Error("Failed to load global importance");
+      const data: GlobalFeatureImportance[] = await res.json();
+      setGlobalImportances(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  loadGlobalImportance();
+}, []);
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar
-        patientCases={mockPatientCases}
-        selectedPatient={selectedPatient}
-        setSelectedPatient={(p) => {
-          setSelectedPatient(p);
-          setRadius(p.features.radius);
-          setTexture(p.features.texture);
-          setConcavity(p.features.concavity);
-        }}
+        //patientCases={mockPatientCases}
+        //selectedPatient={selectedPatient}
+        //setSelectedPatient={(p) => {
+          //setSelectedPatient(p);
+          //setRadius(p.features.radius);
+          //setTexture(p.features.texture);
+          //setConcavity(p.features.concavity);
+        //}}
         radius={radius}
         setRadius={setRadius}
         texture={texture}
         setTexture={setTexture}
         concavity={concavity}
         setConcavity={setConcavity}
+        meanPerimeter={meanPerimeter}
+        setMeanPerimeter={setMeanPerimeter}
+        meanConcavePoints={meanConcavePoints}
+        setMeanConcavePoints={setMeanConcavePoints}
+        worstRadius={worstRadius}
+        setWorstRadius={setWorstRadius}
+        worstPerimeter={worstPerimeter}
+        setWorstPerimeter={setWorstPerimeter}
+        worstArea={worstArea}
+        setWorstArea={setWorstArea}
+        worstConcavePoints={worstConcavePoints}
+        setWorstConcavePoints={setWorstConcavePoints}
+        worstConcavity={worstConcavity}
+        setWorstConcavity={setWorstConcavity}
         explanationMode={explanationMode}
         setExplanationMode={setExplanationMode}
       />
