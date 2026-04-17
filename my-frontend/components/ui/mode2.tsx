@@ -45,7 +45,7 @@ export default function Mode2({ result }: { result: PredictionResponse }) {
 
         {/* Plain-language bullets */}
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold">Clinical interpretation</h3>
+          <h3 className="text-sm font-semibold">Clinical Interpretation Summary</h3>
           <ul className="text-sm list-disc list-inside space-y-1">
             {bullets.map((b, i) => (
               <li key={i}>{b}</li>

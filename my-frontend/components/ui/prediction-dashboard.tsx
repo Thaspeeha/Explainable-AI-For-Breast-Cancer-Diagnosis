@@ -63,49 +63,100 @@ export default function PredictionDashboard({ result, explanationMode }: Props) 
 
   return (
     <div className="space-y-6">
-      {/* Hero section */}
-      <section className="border border-slate-200 rounded-lg p-4 bg-slate-50 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span
-              className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                isMalignant
-                  ? "bg-red-100 text-red-700"
-                  : "bg-emerald-100 text-emerald-700"
-              }`}
-            >
-              {isMalignant ? "⚠️ MALIGNANT" : "✅ BENIGN"}
-            </span>
-            <span className="text-sm text-slate-600">
-              Model estimate for this tumor
-            </span>
-          </div>
-          <div className="text-right">
-            <div className="text-xs text-slate-500 uppercase tracking-wide">
-              Confidence
-            </div>
-            <div className="text-lg font-semibold text-slate-800">
-              {confidence.toFixed(1)}%
-            </div>
-          </div>
+    <section
+  className={`rounded-xl p-5 shadow-sm border ${
+    isMalignant
+      ? "bg-rose-50/80 border-rose-100"
+      : "bg-emerald-50/80 border-emerald-100"
+  }`}
+>
+  <div className="grid gap-6 md:grid-cols-[1fr,1.4fr,1fr] items-center">
+    
+    {/* LEFT */}
+    <div className="space-y-2 max-w-xs">
+      <div
+        className={`text-[11px] font-semibold tracking-[0.12em] uppercase ${
+          isMalignant ? "text-rose-500" : "text-emerald-600"
+        }`}
+      >
+        AI Diagnosis
+      </div>
+
+      <div
+        className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold text-white shadow-sm ${
+          isMalignant ? "bg-red-700" : "bg-emerald-700"
+        }`}
+      >
+        <span className="mr-2 text-base">
+          {isMalignant ? "⚠️" : "✅"}
+        </span>
+        <span>{isMalignant ? "MALIGNANT" : "BENIGN"}</span>
+      </div>
+
+      <div
+        className={`mt-1 text-xs ${
+          isMalignant ? "text-rose-700" : "text-emerald-700"
+        }`}
+      >
+        {isMalignant
+          ? "Immediate clinical evaluation recommended"
+          : "Likely benign with moderate confidence"}
+      </div>
+    </div>
+
+    {/* MIDDLE */}
+      <div className="space-y-2 text-center max-w-sm mx-auto">
+        <div
+          className={`text-[11px] font-semibold tracking-[0.12em] uppercase ${
+            isMalignant ? "text-rose-500" : "text-emerald-600"
+          }`}
+        >
+          Malignancy probability
         </div>
 
-        {/* Progress bar */}
-        <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+        <div className="text-3xl font-semibold text-slate-900">
+          {malignantPct.toFixed(1)}%
+        </div>
+
+        <div
+          className={`mt-1 h-2 w-full overflow-hidden rounded-full ${
+            isMalignant ? "bg-rose-100" : "bg-emerald-100"
+          }`}
+        >
           <div
-            className={`h-full transition-all ${
-              isMalignant ? "bg-red-500" : "bg-emerald-500"
+            className={`h-full rounded-full ${
+              isMalignant ? "bg-red-600" : "bg-emerald-600"
             }`}
-            style={{ width: `${confidence}%` }}
+            style={{ width: `${malignantPct}%` }}
           />
         </div>
 
-        {/* Recommended action */}
-        <div className="text-xs text-slate-700">
-          <span className="font-semibold">Recommended clinical action: </span>
+        <div
+          className={`mt-1 flex justify-between text-[11px] ${
+            isMalignant ? "text-rose-700" : "text-emerald-700"
+          }`}
+        >
+          <span>0% Benign</span>
+          <span>100% Malignant</span>
+        </div>
+      </div>
+    
+
+    {/* RIGHT */}
+    <div className="flex justify-end items-center">
+      <div className="relative rounded-lg bg-white/90 p-4 shadow-sm max-w-xs">
+        <div className="text-[11px] font-semibold tracking-[0.12em] text-slate-500 uppercase mb-1">
+          Recommended action
+        </div>
+
+        <div className="text-sm leading-snug text-slate-800">
           {recommendedAction}
         </div>
-      </section>
+      </div>
+    </div>
+
+  </div>
+</section>
 
       {/* Metrics row */}
       <section className="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -168,7 +219,7 @@ export default function PredictionDashboard({ result, explanationMode }: Props) 
       <section className="border border-slate-200 rounded-lg p-4 bg-white space-y-2">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-slate-800">
-            Clinical validation
+            Clinical Pattern Match
           </h3>
           <div className="text-[11px] px-2 py-1 rounded-full bg-slate-100 text-slate-600">
             {birads}

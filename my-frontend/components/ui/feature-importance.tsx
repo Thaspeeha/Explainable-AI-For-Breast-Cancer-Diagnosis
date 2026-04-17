@@ -1,7 +1,7 @@
 // components/FeatureImportanceTab.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { GlobalFeatureImportance } from "@/app/page";
 
 const FILTERS = [
@@ -62,7 +62,7 @@ export default function FeatureImportanceTab({
         {filtered
           .slice()
           .sort((a, b) => a.rank - b.rank)
-          .slice(0, 15)
+          .slice(0, 20)
           .map((f) => (
             <div key={f.feature} className="space-y-1">
               <div className="flex items-center justify-between text-xs">
