@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { GlobalFeatureImportance } from "@/app/page";
+import type { GlobalFeatureImportance } from "@/app/PredictionPage";
 
 const FILTERS = [
   { id: "all", label: "All Features" },

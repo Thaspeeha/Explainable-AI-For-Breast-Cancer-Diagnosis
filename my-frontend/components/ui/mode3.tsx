@@ -1,6 +1,6 @@
 // components/Mode3.tsx
 import { Card, CardContent } from "@/components/ui/card";
-import type { PredictionResponse } from "@/app/page";
+import type { PredictionResponse } from "@/app/PredictionPage";
 
 export default function Mode3({ result }: { result: PredictionResponse }) {
   // All 10+ features ranked by importance (backend gives rank)

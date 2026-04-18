@@ -1,5 +1,5 @@
 // components/ModelConfidenceTab.tsx
-import type { PredictionResponse, ModelMetrics } from "@/app/page";
+import type { PredictionResponse, ModelMetrics } from "@/app/PredictionPage";
 
 export default function ModelConfidenceTab({
   result,

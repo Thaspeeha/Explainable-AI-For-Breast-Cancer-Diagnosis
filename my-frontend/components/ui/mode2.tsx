@@ -1,6 +1,6 @@
 // components/Mode2.tsx
 import { Card, CardContent } from "@/components/ui/card";
-import type { PredictionResponse } from "@/app/page";
+import type { PredictionResponse } from "@/app/PredictionPage";
 
 export default function Mode2({ result }: { result: PredictionResponse }) {
   const bars = result.mode2.bars.slice(0, 6);

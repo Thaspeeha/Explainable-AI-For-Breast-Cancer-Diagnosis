@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "../lib/authOptions";
 import PredictionPage from "./PredictionPage";
+import { Suspense } from "react";
+
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -10,5 +12,11 @@ export default async function Home() {
     redirect("/login");
   
 
-  return <PredictionPage />;
+  return (
+    <Suspense>
+      <div className="animate-fade-in">
+        <PredictionPage />
+      </div>
+    </Suspense>
+  );
 }

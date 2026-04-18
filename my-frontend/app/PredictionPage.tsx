@@ -1,4 +1,4 @@
-// app/page.tsx
+// app/PredictionPage.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -71,6 +71,7 @@ export default function Home(): JSX.Element {
   //const [selectedPatient, setSelectedPatient] = useState<PatientCase>(
     //mockPatientCases[0]
   //);
+  const [patientId, setPatientId] = useState<string>("CASE-001");
 
   const [radius, setRadius] = useState(10);
   const [texture, setTexture] = useState(15);
@@ -187,12 +188,14 @@ useEffect(() => {
       <Sidebar
         //patientCases={mockPatientCases}
         //selectedPatient={selectedPatient}
-        //setSelectedPatient={(p) => {
+        //setSelectedPatient={(p) => 
           //setSelectedPatient(p);
           //setRadius(p.features.radius);
           //setTexture(p.features.texture);
           //setConcavity(p.features.concavity);
         //}}
+        patientId={patientId}
+        setPatientId={setPatientId}
         radius={radius}
         setRadius={setRadius}
         texture={texture}
@@ -220,11 +223,16 @@ useEffect(() => {
 
       <main className="flex-1 bg-gray-50 flex flex-col text-gray-800 p-6 space-y-4 overflow-y-auto">
         
+
+
         {/* 🔝 TOP NAV */}
+        <div className="-ml-6 -mt-6 ">
   <TopNav activeTab={activeTab} 
   onTabChange={setActiveTab}
-  result={result}  
+  result={result}
+  patientId={patientId}  
   />
+  </div>
 
          {/* 📄 CONTENT */}
   
@@ -236,17 +244,7 @@ useEffect(() => {
         {/* PREDICTION DASHBOARD TAB */}
       {result && activeTab === "prediction" && (
         <div className="w-full bg-white shadow rounded-lg p-4 space-y-4">
-            <h2 className="text-lg font-semibold">
-              Prediction: {result.prediction_label}
-            </h2>
-            <p>
-              Malignant probability:{" "}
-              {(result.malignant_probability * 100).toFixed(1)}%
-            </p>
-            <p>
-              Benign probability:{" "}
-              {(result.benign_probability * 100).toFixed(1)}%
-            </p>
+          
 
             <PredictionDashboard result={result} explanationMode = {explanationMode} />
           </div>

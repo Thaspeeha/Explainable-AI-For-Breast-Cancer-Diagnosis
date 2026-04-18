@@ -1,5 +1,5 @@
 // components/mode1.tsx
-import type { PredictionResponse } from "@/app/page";
+import type { PredictionResponse } from "@/app/PredictionPage";
 
 export default function Mode1({ result }: { result: PredictionResponse }) {
   const cards = result.mode1.cards.slice(0, 5);
@@ -26,12 +26,21 @@ export default function Mode1({ result }: { result: PredictionResponse }) {
       <div className="space-y-3">
         {cards.map((card) => {
           const width = card.impact_percent; // 0–100
-          const colorClass =
-            card.risk_color === "red"
-              ? "bg-red-500"
-              : card.risk_color === "green"
-              ? "bg-emerald-500"
-              : "bg-amber-500";
+          const styles =
+  card.risk_color === "red"
+    ? {
+        border: "border-l-red-500",
+        bar: "bg-red-500",
+      }
+    : card.risk_color === "green"
+    ? {
+        border: "border-l-emerald-500",
+        bar: "bg-emerald-500",
+      }
+    : {
+        border: "border-l-amber-500",
+        bar: "bg-amber-500",
+      };
 
           const range = card.ranges;
           const benignRangeText =
@@ -51,10 +60,14 @@ export default function Mode1({ result }: { result: PredictionResponse }) {
           return (
             <div
               key={card.feature}
-              className="flex items-stretch gap-3 rounded-2xl border border-slate-200 bg-white shadow-sm px-4 py-3"
-            >
-              {/* Left colored rail / dot */}
-              <div className="flex items-center">
+              className={`group relative flex items-stretch gap-3 rounded-xl border border-slate-200
+  border-l-4 ${styles.border} bg-white px-4 py-3 shadow-sm transition-all duration-200 hover:shadow-md hover:translate-x-1`}
+>
+            
+             
+
+        {/* Left dot (emoji) */}
+        <div className="flex items-center px-2">
                 <span className="text-lg">
                  {card.risk_color === "red"
                  ? "🔴"
@@ -94,7 +107,7 @@ export default function Mode1({ result }: { result: PredictionResponse }) {
                 </div>
                 <div className="w-14 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                   <div
-                    className={`h-full ${colorClass}`}
+                    className={`h-full ${styles.bar}`}
                     style={{ width: `${Math.min(width, 100)}%` }}
                   />
                 </div>

@@ -1,8 +1,10 @@
+// components/ui/top-nav.tsx
 "use client";
 
-import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { useState, useEffect, useRef } from "react";
+import { useSession, signOut } from "next-auth/react";
 import type { PredictionResponse } from "@/app/PredictionPage";
+import { jsPDF } from "jspdf";
 
 export type TabType = "prediction" | "features" | "confidence";
 
@@ -10,12 +12,26 @@ interface Props {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
   result: PredictionResponse | null;
+  patientId: string; 
 }
 
-export default function TopNav({ activeTab, onTabChange, result }: Props) {
+export default function TopNav({ activeTab, onTabChange, result, patientId }: Props) {
   const { data: session, status } = useSession();
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [exportOpen, setExportOpen] = useState(false);
+
+    const [localPatientId, setLocalPatientId] = useState(patientId);
+  const panelRef = useRef<HTMLDivElement | null>(null); // <-- define this
+  // Keep localPatientId in sync when patientId changes from sidebar
+  useEffect(() => {
+    setLocalPatientId(patientId);
+  }, [patientId]);
+
+    const malignancyPct = result
+    ? (result.malignant_probability * 100).toFixed(1)
+    : null;
+
 
   const tabs = [
     { key: "prediction", label: "Prediction Dashboard", icon: "🎯" },
@@ -23,32 +39,64 @@ export default function TopNav({ activeTab, onTabChange, result }: Props) {
     { key: "confidence", label: "Model Confidence", icon: "🎲" },
   ];
 
-  async function handleExport() {
-    if (!result) {
-      setSaveError("No prediction to export yet.");
-      return;
-    }
-    try {
-      setSaving(true);
-      setSaveError(null);
-      const res = await fetch("/api/reports", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(result),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setSaveError(data.error || "Failed to save report.");
-        return;
-      }
-      alert("Report saved successfully.");
-    } catch (err) {
-      console.error(err);
-      setSaveError("Network error while saving report.");
-    } finally {
-      setSaving(false);
-    }
+  async function handleConfirmExport() {
+  if (!result) {
+    setSaveError("No prediction to export yet.");
+    return;
   }
+  if (!localPatientId.trim()) {
+    setSaveError("Please enter a patient / sample ID.");
+    return;
+  }
+
+  try {
+    setSaving(true);
+    setSaveError(null);
+
+    // Build report text directly on the client
+    const malignantPct = (result.malignant_probability * 100).toFixed(1);
+    const benignPct = (result.benign_probability * 100).toFixed(1);
+
+    const reportLines = [
+      "BREAST CANCER AI DIAGNOSTIC REPORT",
+      "==================================",
+      "",
+      `Patient / Sample ID: ${localPatientId}`,
+      "",
+      "AI Prediction",
+      "-------------",
+      `- Prediction label: ${result.prediction_label}`,
+      `- Malignancy probability: ${malignantPct}%`,
+      `- Benign probability: ${benignPct}%`,
+      "",
+      "Explanation Summary",
+      "-------------------",
+      `- Summary: ${result.mode3?.summary || "Not available."}`,
+      "",
+      "Disclaimer: This AI output is for decision support only and is not a substitute for professional clinical judgment.",
+    ];
+
+    const text = reportLines.join("\n");
+
+    // Generate PDF on client
+    const doc = new jsPDF();
+    const lines = doc.splitTextToSize(text, 180);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+    doc.text(lines, 15, 20);
+
+    doc.save(`${localPatientId || "case"}-report.pdf`);
+
+    alert("PDF report downloaded.");
+    setExportOpen(false);
+  } catch (err) {
+    console.error(err);
+    setSaveError("Error while generating PDF.");
+  } finally {
+    setSaving(false);
+  }
+}
+
 
   const clinicianLabel =
     status === "loading"
@@ -60,7 +108,7 @@ export default function TopNav({ activeTab, onTabChange, result }: Props) {
   return (
     <div className="w-full bg-white border-b shadow-sm">
       {/* 🔝 HEADER */}
-      <div className="flex items-center justify-between px-6 py-3 bg-gray-100">
+      <div className="flex items-center justify-between px-4 py-3 bg-gray-100">
         <h1 className="text-lg font-semibold text-gray-800">
           Breast Cancer Diagnostic Assistant
         </h1>
@@ -71,33 +119,104 @@ export default function TopNav({ activeTab, onTabChange, result }: Props) {
             {clinicianLabel}
           </div>
 
+          {/* LOGOUT */}
+  {status === "authenticated" && (
+    <button
+      type="button"
+      onClick={() => signOut({ callbackUrl: "/login" })}
+      className="text-xs px-3 py-1 rounded-full border border-slate-300 text-slate-600 hover:bg-slate-100 transition"
+    >
+      Log out
+    </button>
+  )}
+
           {/* AI ACTIVE */}
           <div className="flex items-center gap-2 bg-gray-200 px-3 py-1 rounded-full text-sm">
             <span className="w-2 h-2 bg-green-500 rounded-full"></span>
             AI Active
           </div>
 
-          {/* CASE */}
+              {/* show patient ID */}
           <div className="bg-gray-200 px-3 py-1 rounded-full text-sm">
-            Case #001
+            {patientId || "No ID"}
           </div>
 
-          {/* EXPORT */}
+     
+          {/* EXPORT button: toggles dropdown panel */}
+           
+    <button
+      type="button"
+      onClick={() => setExportOpen((prev) => !prev)}
+      disabled={saving || !result}
+      className="bg-teal-700 text-white px-4 py-2 rounded-lg text-sm hover:bg-teal-800 transition disabled:opacity-60"
+    >
+      {saving ? "Saving..." : "📄 Export Report"}
+    </button>
+
+    {exportOpen && (
+      <div
+        ref={panelRef}
+        className="absolute right-0 mt-2 w-80 rounded-lg border border-slate-200 bg-white shadow-lg p-3 text-xs z-20"
+      >
+        <div className="font-semibold text-slate-800 mb-2">
+          Export clinical report
+        </div>
+
+        <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+          Patient / Sample ID
+        </label>
+        <input
+          type="text"
+          value={localPatientId}
+          onChange={(e) => setLocalPatientId(e.target.value)}
+          className="w-full rounded-md border border-slate-300 px-2.5 py-1.5 text-xs mb-2"
+          placeholder="e.g. CASE-001 or Patient A"
+        />
+
+        {result && (
+          <div className="mb-2 text-slate-700">
+            <div>
+              Prediction:{" "}
+              <span className="font-semibold">
+                {result.prediction_label}
+              </span>
+            </div>
+            <div>
+              Malignancy probability:{" "}
+              <span className="font-semibold">
+                {(result.malignant_probability * 100).toFixed(1)}%
+              </span>
+            </div>
+          </div>
+        )}
+
+        {saveError && (
+          <div className="mb-2 text-[11px] text-red-600">
+            {saveError}
+          </div>
+        )}
+
+        <div className="flex justify-end gap-2 mt-2">
           <button
-            onClick={handleExport}
-            disabled={saving}
-            className="bg-teal-700 text-white px-4 py-2 rounded-lg text-sm hover:bg-teal-800 transition disabled:opacity-60"
+            type="button"
+            onClick={() => setExportOpen(false)}
+            className="px-3 py-1.5 rounded-md border border-slate-300 text-[11px] text-slate-600"
           >
-            {saving ? "Saving..." : "📄 Export Report"}
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleConfirmExport}
+            disabled={saving}
+            className="px-3 py-1.5 rounded-md bg-teal-700 text-[11px] font-semibold text-white disabled:opacity-60"
+          >
+            {saving ? "Saving..." : "Confirm & Save"}
           </button>
         </div>
       </div>
-
-      {saveError && (
-        <div className="px-6 py-1 text-xs text-red-600 bg-red-50 border-b border-red-100">
-          {saveError}
-        </div>
-      )}
+    )}
+  </div>
+</div>
 
       {/* 📊 TAB NAV */}
       <div className="flex gap-8 px-6">

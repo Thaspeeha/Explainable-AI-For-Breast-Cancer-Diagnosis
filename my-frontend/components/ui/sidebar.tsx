@@ -5,7 +5,9 @@ import { useState } from "react";
 import { Slider } from "./slider";
 
 interface SidebarProps {
-    radius: number;
+  patientId: string;
+  setPatientId: (v: string) => void;
+  radius: number;
   setRadius: (v: number) => void;
   texture: number;
   setTexture: (v: number) => void;
@@ -30,6 +32,8 @@ interface SidebarProps {
 }
 
 export function Sidebar({
+  patientId,
+  setPatientId,
   radius,
   setRadius,
   texture,
@@ -100,7 +104,7 @@ export function Sidebar({
           <div>
             <div className="text-lg font-serif leading-tight">Explainable AI For Breast Cancer Diagnosis</div>
             <div className="text-[11px] tracking-wide uppercase text-white/80">
-              Clinical Decision Support v2.1
+              Clinical Decision Support 
             </div>
           </div>
         </div>
@@ -122,9 +126,22 @@ export function Sidebar({
           </button>
 
           {openSections.patient && (
-            <div className="space-y-1">
+            <div className="space-y-3">
+              {/* NEW: Patient / Sample ID input */}
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                  Patient / Sample ID
+                </label>
+                <input
+                  type="text"
+                  value={patientId ?? ""}
+                  onChange={(e) => setPatientId(e.target.value)}
+                  className="w-full rounded-md border border-slate-300 px-2.5 py-1.5 text-xs"
+                  placeholder="e.g. CASE-001 or Patient A"
+                />
+              </div>
               <div className="text-[12px] font-semibold text-slate-500">
-                Adjust sliders to match your patient; see Clinical ranges below for example benign/malignant values.
+                Adjust sliders to match your patient; see Clinical ranges below for benign/malignant values.
               </div>
               
               {/* 🔥 Sliders moved HERE */}
