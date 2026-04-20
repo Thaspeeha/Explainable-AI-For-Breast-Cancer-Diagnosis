@@ -1,5 +1,4 @@
 // components/Mode2.tsx
-import { Card, CardContent } from "@/components/ui/card";
 import type { PredictionResponse } from "@/app/PredictionPage";
 
 export default function Mode2({ result }: { result: PredictionResponse }) {
@@ -7,52 +6,67 @@ export default function Mode2({ result }: { result: PredictionResponse }) {
   const bullets = result.mode2.bullets;
 
   return (
-    <Card>
-      <CardContent className="space-y-6 pt-6">
-        {/* Horizontal bar chart (top 5) */}
-        <div className="space-y-3">
-          {bars.map((bar) => {
-            const width = bar.percent;
-            const isMalignant = bar.direction === "toward_malignant";
+      <section className="space-y-6">
+      {/* Header */}
+      <div>
+        <div
+          className="text-[20px] font-normal text-slate-900"
+          style={{ fontFamily: "'DM Serif Display', serif" }}
+        >
+          Feature Influence
+        </div>
+        <div className="text-[14px] text-slate-500 mt-[2px]">
+          Relative diagnostic contribution of top features
+        </div>
+      </div>
 
-            const label = isMalignant ? "↑ elevated" : "↓ reduced";
+   {/* Bar Chart */}
+      <div className="space-y-3">
+        {bars.map((bar, index) => {
+          const width = Math.min(bar.percent * 3.5, 100); // Scale for visual impact
+          const isPositive = bar.direction === "toward_malignant";
 
-            const colorClass =
-              bar.risk_color === "red"
-                ? "bg-red-500"
-                : bar.risk_color === "green"
-                ? "bg-green-500"
-                : "bg-yellow-500";
+          const colorClass =
+            bar.risk_color === "red"
+              ? "bg-red-500"
+              : bar.risk_color === "green"
+              ? "bg-emerald-500"
+              : "bg-amber-500";
 
-            return (
-              <div key={bar.feature} className="space-y-1">
-                <div className="flex justify-between text-xs font-medium">
-                  <span>{bar.feature}</span>
-                  <span className="text-gray-500">{label}</span>
-                </div>
+          return (
+            <div
+              key={bar.feature}
+              className="flex items-center gap-3.5"
+              style={{ animationDelay: `${index * 60}ms` }}
+            >
+              {/* Feature Name (Right-aligned) */}
+              <div className="w-[170px] text-right text-sm font-medium text-slate-900">
+                {bar.feature}
+              </div>
 
-                {/* Clean medical-style bar: no gridlines, just bar */}
-                <div className="h-4 bg-gray-100 rounded overflow-hidden">
-                  <div
-                    className={`h-full ${colorClass}`}
-                    style={{ width: `${width}%` }}
-                  />
+              {/* Bar Track */}
+              <div className="flex-1 h-6 bg-slate-100 rounded-md overflow-hidden">
+                <div
+                  className={`h-full flex items-center px-3 rounded-md transition-all duration-700 ${colorClass}`}
+                  style={{ width: `${width}%` }}
+                >
+                  {width > 20 && (
+                    <span className="text-white text-xs font-semibold whitespace-nowrap">
+                      {isPositive ? "↑ Elevated" : "↓ Reduced"}
+                    </span>
+                  )}
                 </div>
               </div>
-            );
-          })}
-        </div>
 
-        {/* Plain-language bullets */}
-        <div className="space-y-2">
-          <h3 className="text-sm font-semibold">Clinical Interpretation Summary</h3>
-          <ul className="text-sm list-disc list-inside space-y-1">
-            {bullets.map((b, i) => (
-              <li key={i}>{b}</li>
-            ))}
-          </ul>
-        </div>
-      </CardContent>
-    </Card>
+              {/* Percentage */}
+              <div className="w-12 text-sm font-semibold text-slate-600 font-mono">
+                {isPositive ? "+" : "−"}{Math.round(bar.percent)}%
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+    
   );
 }

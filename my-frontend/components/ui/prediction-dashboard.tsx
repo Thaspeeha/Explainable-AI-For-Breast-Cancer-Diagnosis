@@ -214,7 +214,7 @@ useEffect(() => {
         </div>
       </section>
 
-      {/* Clinical validation panel */}
+      
       {/* Clinical validation panel */}
 <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-5">
   <div className="flex items-start gap-3 mb-3">

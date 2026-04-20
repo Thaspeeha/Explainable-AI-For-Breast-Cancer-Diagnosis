@@ -458,9 +458,51 @@ export function Sidebar({
                 </div>
               </div>
               <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2">
-                <div className="font-semibold text-[#1A5F7A]">CONCATIVITY</div>
+                <div className="font-semibold text-[#1A5F7A]">CONCATIVITY SCORE</div>
                 <div className="text-slate-700">
                   0–0.13 (benign) · 0.07–0.43 (malignant)
+                </div>
+              </div>
+              <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2">
+                <div className="font-semibold text-[#1A5F7A]">MEAN PERIMETER</div>
+                <div className="text-slate-700">
+                  40–100 (benign) · 70–200 (malignant)
+                </div>
+              </div>
+              <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2">
+                <div className="font-semibold text-[#1A5F7A]">MEAN CONCAVE POINTS</div>
+                <div className="text-slate-700">
+                  0.00–0.05 (benign) · 0.03–0.20 (malignant)
+                </div>
+              </div>
+              <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2">
+                <div className="font-semibold text-[#1A5F7A]">WORST RADIUS</div>
+                <div className="text-slate-700">
+                  10–20mm (benign) · 18–40mm (malignant)
+                </div>
+              </div>
+              <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2">
+                <div className="font-semibold text-[#1A5F7A]">WORST PERIMETER</div>
+                <div className="text-slate-700">
+                  50–150 (benign) · 120–300 (malignant)
+                </div>
+              </div>
+              <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2">
+                <div className="font-semibold text-[#1A5F7A]">WORST AREA</div>
+                <div className="text-slate-700">
+                  200–800 (benign) · 600–2500 (malignant)
+                </div>
+              </div>
+              <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2">
+                <div className="font-semibold text-[#1A5F7A]">WORST CONCAVE POINTS</div>
+                <div className="text-slate-700">
+                  0.00–0.10 (benign) · 0.08–0.50 (malignant)
+                </div>
+              </div>
+              <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2">
+                <div className="font-semibold text-[#1A5F7A]">WORST CONCATIVITY</div>
+                <div className="text-slate-700">
+                  0.00–0.20 (benign) · 0.15–0.60 (malignant)
                 </div>
               </div>
             </div>
