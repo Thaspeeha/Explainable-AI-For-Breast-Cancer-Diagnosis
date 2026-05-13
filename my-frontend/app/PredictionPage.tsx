@@ -57,6 +57,13 @@ export interface ModelMetrics {
   false_negative_rate: number;
 }
 
+export interface ModelComparison {
+  name: string;          // "Random Forest"
+  short_name: string;    // "RF"
+  malignant_probability: number;
+  benign_probability: number;
+}
+
  export interface PredictionResponse {
   prediction_label: string;
   malignant_probability: number;
@@ -64,13 +71,16 @@ export interface ModelMetrics {
   mode1: { cards: Mode1Card[] };
   mode2: { bars: Bar[]; bullets: string[] };
   mode3: { bars: Bar[]; summary: string };
+  model_comparisons: ModelComparison[];  // NEW
 }
 
+export type PrimaryModelKey = "RF" | "XGB" | "LR";
 
 export default function Home(): JSX.Element {
   //const [selectedPatient, setSelectedPatient] = useState<PatientCase>(
     //mockPatientCases[0]
   //);
+  const [selectedModel, setSelectedModel] = useState<PrimaryModelKey>("RF");
   const [patientId, setPatientId] = useState<string>("CASE-001");
 
   const [radius, setRadius] = useState(10);
@@ -240,13 +250,42 @@ useEffect(() => {
         {loading && <p className="text-gray-500">Running model...</p>}
         {error && <p className="text-red-500">{error}</p>}
         
+        {/* Model selector pills */}
+{result && (
+  <div className="flex flex-wrap items-center gap-2 mb-2">
+    <span className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+      Primary model:
+    </span>
+    {[
+      { key: "RF", label: "Random Forest" },
+      { key: "XGB", label: "XGBoost" },
+      { key: "LR", label: "Logistic Regression" },
+    ].map((m) => {
+      const active = selectedModel === m.key;
+      return (
+        <button
+          key={m.key}
+          type="button"
+          onClick={() => setSelectedModel(m.key as PrimaryModelKey)}
+          className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${
+            active
+              ? "bg-slate-900 text-white border-slate-900"
+              : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+          }`}
+        >
+          {m.label}
+        </button>
+      );
+    })}
+  </div>
+)}
         
         {/* PREDICTION DASHBOARD TAB */}
       {result && activeTab === "prediction" && (
         <div className="w-full bg-white shadow rounded-lg p-4 space-y-4">
           
 
-            <PredictionDashboard result={result} explanationMode = {explanationMode} />
+            <PredictionDashboard result={result} explanationMode = {explanationMode} selectedModel = {selectedModel}/>
           </div>
         )}
       {/* FEATURE IMPORTANCE TAB */}   

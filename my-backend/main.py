@@ -23,8 +23,13 @@ app.add_middleware(
 # Load artifacts (TOP 10)
 # =========================
 
-# RF model trained on 10 selected features
-model = joblib.load("bc_rf_model.pkl")
+# RF model (main explainable model)
+rf_model = joblib.load("bc_rf_model.pkl")
+
+# XGBoost + Logistic Regression (additional comparators)
+xgb_model = joblib.load("bc_xgb_model.pkl")
+lr_model = joblib.load("bc_lr_model.pkl")
+
 scaler = joblib.load("scaler.pkl")
 feature_names = np.load("feature_names.npy", allow_pickle=True)  # len = 10
 global_importance = np.load("global_importance.npy", allow_pickle=True).tolist()
@@ -47,13 +52,12 @@ IDX_WORST_AREA = feature_index["worst area"]
 IDX_WORST_CP = feature_index["worst concave points"]
 IDX_WORST_CONCAVITY = feature_index["worst concavity"]
 
-
 required = ["mean radius", "mean texture", "mean concavity"]
 missing = [f for f in required if f not in feature_index]
 if missing:
     raise ValueError(f"Missing required slider features in feature_names.npy: {missing}")
 
-# SHAP TreeExplainer background: benign-like cloud
+# SHAP TreeExplainer on RF (your existing explainer)
 background = scaler.transform(
     np.stack(
         [
@@ -66,15 +70,25 @@ background = scaler.transform(
         axis=0,
     )
 )
-explainer = shap.TreeExplainer(model, background)
+explainer = shap.TreeExplainer(rf_model, background)
 
 # =========================
 # Helper functions
 # =========================
 
-def predict_proba_single(x_raw: np.ndarray) -> float:
+def predict_proba_single_rf(x_raw: np.ndarray) -> float:
     x_scaled = scaler.transform([x_raw])
-    proba = model.predict_proba(x_scaled)[0][1]  # class 1 = benign
+    proba = rf_model.predict_proba(x_scaled)[0][1]  # class 1 = benign
+    return float(proba)
+
+def predict_proba_single_xgb(x_raw: np.ndarray) -> float:
+    x_scaled = scaler.transform([x_raw])
+    proba = xgb_model.predict_proba(x_scaled)[0][1]  # benign
+    return float(proba)
+
+def predict_proba_single_lr(x_raw: np.ndarray) -> float:
+    x_scaled = scaler.transform([x_raw])
+    proba = lr_model.predict_proba(x_scaled)[0][1]  # benign
     return float(proba)
 
 def compute_shap_for_x(x_raw: np.ndarray) -> np.ndarray:
@@ -166,15 +180,22 @@ def build_mode_bars(
     return {"all_bars": top_items, "top5_bars": top_items[:5]}
 
 def build_payload_for_single(x_raw: np.ndarray) -> Dict[str, Any]:
-    benign_prob = predict_proba_single(x_raw)
-    malignant_prob = 1.0 - benign_prob
-    print("backend benign_prob", benign_prob, "malignant_prob", malignant_prob)
+    # 1) RF prediction (your primary model)
+    benign_prob_rf = predict_proba_single_rf(x_raw)
+    malignant_prob_rf = 1.0 - benign_prob_rf
 
     benign_threshold = 0.5
-    prediction_label = "BENIGN" if benign_prob >= benign_threshold else "MALIGNANT"
+    prediction_label = "BENIGN" if benign_prob_rf >= benign_threshold else "MALIGNANT"
 
+    # 2) Additional models
+    benign_prob_xgb = predict_proba_single_xgb(x_raw)
+    benign_prob_lr = predict_proba_single_lr(x_raw)
+
+    malignant_prob_xgb = 1.0 - benign_prob_xgb
+    malignant_prob_lr = 1.0 - benign_prob_lr
+
+    # 3) SHAP explanation from RF (unchanged)
     shap_vec = compute_shap_for_x(x_raw)
-
     bars_data = build_mode_bars(x_raw, shap_vec, k=10)
     all_bars = bars_data["all_bars"]
     top5_bars = bars_data["top5_bars"]
@@ -214,13 +235,36 @@ def build_payload_for_single(x_raw: np.ndarray) -> Dict[str, Any]:
 
     mode3 = {"bars": all_bars, "summary": summary}
 
+    # 4) Per‑model comparison block
+    model_comparisons = [
+        {
+            "name": "Random Forest",
+            "short_name": "RF",
+            "malignant_probability": float(malignant_prob_rf),
+            "benign_probability": float(benign_prob_rf),
+        },
+        {
+            "name": "XGBoost",
+            "short_name": "XGB",
+            "malignant_probability": float(malignant_prob_xgb),
+            "benign_probability": float(benign_prob_xgb),
+        },
+        {
+            "name": "Logistic Regression",
+            "short_name": "LR",
+            "malignant_probability": float(malignant_prob_lr),
+            "benign_probability": float(benign_prob_lr),
+        },
+    ]
+
     return {
         "prediction_label": prediction_label,
-        "malignant_probability": float(malignant_prob),
-        "benign_probability": float(benign_prob),
+        "malignant_probability": float(malignant_prob_rf),
+        "benign_probability": float(benign_prob_rf),
         "mode1": {"cards": mode1_cards},
         "mode2": mode2,
         "mode3": mode3,
+        "model_comparisons": model_comparisons,
     }
 
 # =========================
@@ -247,6 +291,7 @@ class PredictResponse(BaseModel):
     mode1: dict
     mode2: dict
     mode3: dict
+    model_comparisons: list
 
 class GlobalFeature(BaseModel):
     feature: str
@@ -256,7 +301,6 @@ class GlobalFeature(BaseModel):
 
 @app.post("/predict", response_model=PredictResponse)
 def predict(req: PredictRequest):
-    # Start from benign baseline, override slider features
     x_raw = benign_baseline.copy()
     x_raw[IDX_RADIUS] = req.radius
     x_raw[IDX_TEXTURE] = req.texture

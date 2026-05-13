@@ -8,4 +8,4 @@ tensorflow-cpu
 shap
 lime
 joblib
-
+xgboost

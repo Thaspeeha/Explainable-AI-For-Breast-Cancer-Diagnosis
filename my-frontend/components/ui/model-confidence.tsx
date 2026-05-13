@@ -32,7 +32,7 @@ export default function ModelConfidenceTab({
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
         <div className="space-y-2">
           <h3 className="text-sm font-semibold text-slate-800">
-            Prediction probabilities
+            Prediction probabilities (Random Forest)
           </h3>
           <div className="text-sm">
             <div className="flex justify-between">
@@ -105,6 +105,52 @@ export default function ModelConfidenceTab({
           </p>
         </div>
       </section>
+
+            {/* Model‑to‑model comparison for this case */}
+      {result.model_comparisons && result.model_comparisons.length > 0 && (
+        <section className="mt-4 space-y-2">
+          <h3 className="text-sm font-semibold text-slate-800">
+            Model agreement for this patient
+          </h3>
+          <p className="text-[11px] text-slate-500">
+            All models saw the same feature profile and produced their own malignancy estimates.
+          </p>
+
+          <div className="overflow-hidden rounded-lg border border-slate-200">
+            <table className="w-full text-xs">
+              <thead className="bg-slate-50 text-slate-600">
+                <tr>
+                  <th className="px-3 py-2 text-left">Model</th>
+                  <th className="px-3 py-2 text-right">Malignancy %</th>
+                  <th className="px-3 py-2 text-right">Benign %</th>
+                </tr>
+              </thead>
+              <tbody>
+                {result.model_comparisons.map((m) => (
+                  <tr key={m.name} className="border-t border-slate-200">
+                    <td className="px-3 py-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-slate-800">
+                          {m.name}
+                        </span>
+                        <span className="text-[10px] text-slate-500 uppercase">
+                          {m.short_name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-3 py-2 text-right">
+                      {(m.malignant_probability * 100).toFixed(1)}%
+                    </td>
+                    <td className="px-3 py-2 text-right">
+                      {(m.benign_probability * 100).toFixed(1)}%
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
 
       {/* Performance metrics */}
       <section className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">

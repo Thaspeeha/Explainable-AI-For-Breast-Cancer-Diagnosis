@@ -8,12 +8,20 @@ import { useEffect, useState } from "react";
 interface Props {
   result: PredictionResponse;
   explanationMode: string;
+  selectedModel: "RF" | "XGB" | "LR";
 }
 
-export default function PredictionDashboard({ result, explanationMode }: Props) {
-  const malignantPct = result.malignant_probability * 100;
-  const benignPct = result.benign_probability * 100;
-  const isMalignant = result.prediction_label === "MALIGNANT";
+export default function PredictionDashboard({ result, explanationMode, selectedModel }: Props) {
+  const primaryModel = result.model_comparisons.find(
+    (m) => m.short_name === selectedModel
+  ) ?? {
+    malignant_probability: result.malignant_probability,
+    benign_probability: result.benign_probability,
+  };
+
+  const malignantPct = primaryModel.malignant_probability * 100;
+  const benignPct = primaryModel.benign_probability * 100;
+  const isMalignant = malignantPct >= benignPct;
 const [animatedPct, setAnimatedPct] = useState(0);
   // Certainty level based on max(malignant, benign)
   const confidence = Math.max(malignantPct, benignPct);
@@ -98,7 +106,11 @@ useEffect(() => {
       <div className={`text-[11px] font-mono font-semibold tracking-[0.12em] uppercase ${isMalignant ? "text-rose-500" : "text-emerald-600"}`}>
         AI Diagnosis
       </div>
-
+    <div className="text-[10px] text-slate-500 mt-1">
+  Primary model: {selectedModel === "RF" ? "Random Forest"
+    : selectedModel === "XGB" ? "XGBoost"
+    : "Logistic Regression"}
+</div>
       <div className={`inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold text-white shadow-sm ${
         isMalignant ? "bg-red-800 animate-pulse" : "bg-emerald-700"
       }`}>
