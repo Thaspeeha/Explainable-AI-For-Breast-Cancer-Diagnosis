@@ -84,11 +84,7 @@ export default function Mode3({ result }: { result: PredictionResponse }) {
         })}
       </div>
 
-        {/* Narrative summary */}
-        <div className="space-y-1">
-          <h3 className="text-sm font-semibold">Summary</h3>
-          <p className="text-sm text-gray-700">{result.mode3.summary}</p>
-        </div>
+        
      </section>
   );
 }

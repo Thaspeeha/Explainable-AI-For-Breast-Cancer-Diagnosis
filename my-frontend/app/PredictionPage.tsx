@@ -48,13 +48,19 @@ export interface GlobalFeatureImportance {
   rank: number;
 }
 
-export interface ModelMetrics {
+export interface SingleModelMetrics {
   accuracy: number;
   sensitivity: number;
   specificity: number;
   auc_roc: number;
   brier_score: number;
   false_negative_rate: number;
+}
+
+export interface ModelMetrics {
+  RF: SingleModelMetrics;
+  XGB: SingleModelMetrics;
+  LR: SingleModelMetrics;
 }
 
 export interface ModelComparison {
@@ -68,9 +74,9 @@ export interface ModelComparison {
   prediction_label: string;
   malignant_probability: number;
   benign_probability: number;
-  mode1: { cards: Mode1Card[] };
+  mode1: { cards: Mode1Card[]; summary: string };
   mode2: { bars: Bar[]; bullets: string[] };
-  mode3: { bars: Bar[]; summary: string };
+  mode3: { bars: Bar[] };
   model_comparisons: ModelComparison[];  // NEW
 }
 
@@ -127,6 +133,7 @@ const [worstConcavity, setWorstConcavity] = useState(0.3);
   worst_concave_points: worstConcavePoints,
   worst_concavity: worstConcavity,
               explanationMode,
+              model: selectedModel,
             }),
           }
         );
@@ -168,22 +175,40 @@ const [worstConcavity, setWorstConcavity] = useState(0.3);
   worstPerimeter,
   worstArea,
   worstConcavePoints,
-  worstConcavity, explanationMode]);
+  worstConcavity, explanationMode, selectedModel]);
   
    const modelMetrics: ModelMetrics = {
-  accuracy: 97.4,
-  sensitivity: 97.1,
-  specificity: 97.6,
-  auc_roc: 0.996,
-  brier_score: 0.024,
-  false_negative_rate: 2.9,
+  RF: {
+    accuracy: 94.74,
+    sensitivity: 95.83,
+    specificity: 92.86,
+    auc_roc: 0.992,
+    brier_score: 0.0324,
+    false_negative_rate: 4.17,
+  },
+  XGB: {
+    accuracy: 97.37,
+    sensitivity: 98.61,
+    specificity: 95.24,
+    auc_roc: 0.994,
+    brier_score: 0.0275,
+    false_negative_rate: 1.39,
+  },
+  LR: {
+    accuracy: 93.86,
+    sensitivity: 93.06,
+    specificity: 95.24,
+    auc_roc: 0.993,
+    brier_score: 0.0385,
+    false_negative_rate: 6.94,
+  },
 };
 
 
 useEffect(() => {
   const loadGlobalImportance = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/global_importance`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/global_importance?model=${selectedModel}`);
       if (!res.ok) throw new Error("Failed to load global importance");
       const data: GlobalFeatureImportance[] = await res.json();
       setGlobalImportances(data);
@@ -192,7 +217,7 @@ useEffect(() => {
     }
   };
   loadGlobalImportance();
-}, []);
+}, [selectedModel]);
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar
@@ -240,7 +265,8 @@ useEffect(() => {
   <TopNav activeTab={activeTab} 
   onTabChange={setActiveTab}
   result={result}
-  patientId={patientId}  
+  patientId={patientId}
+  selectedModel={selectedModel}  
   />
   </div>
 
@@ -301,6 +327,7 @@ useEffect(() => {
           result={result as PredictionResponse} // safe to assert since this tab should only be visible when result is available
           metrics={modelMetrics}
           treeConsensusPct={93}
+          selectedModel={selectedModel}
         />
       </div>
     )}

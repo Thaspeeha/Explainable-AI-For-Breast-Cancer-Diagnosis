@@ -115,6 +115,25 @@ export default function Mode1({ result }: { result: PredictionResponse }) {
             </div>
           );
         })}
+         </div>
+          {/* Fixed blue clinical summary box */}
+      <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-4">
+        <div className="flex items-start gap-3">
+          {/* Icon */}
+          <div className="flex-shrink-0 text-xl" aria-hidden="true">
+            🧾
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 space-y-1">
+            <h4 className="text-xs font-bold tracking-wide uppercase text-blue-700">
+              Clinical interpretation summary
+            </h4>
+            <p className="text-sm text-slate-800 leading-relaxed">
+              {result.mode1.summary}
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -1,14 +1,16 @@
 // components/ModelConfidenceTab.tsx
-import type { PredictionResponse, ModelMetrics } from "@/app/PredictionPage";
+import type { PredictionResponse, ModelMetrics, PrimaryModelKey } from "@/app/PredictionPage";
 
 export default function ModelConfidenceTab({
   result,
   metrics,
   treeConsensusPct,
+  selectedModel,
 }: {
   result: PredictionResponse;
   metrics: ModelMetrics;
   treeConsensusPct: number; // e.g., 93
+  selectedModel: PrimaryModelKey;
 }) {
   const malignantPct = result.malignant_probability * 100;
   const benignPct = result.benign_probability * 100;
@@ -32,7 +34,7 @@ export default function ModelConfidenceTab({
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
         <div className="space-y-2">
           <h3 className="text-sm font-semibold text-slate-800">
-            Prediction probabilities (Random Forest)
+            Prediction probabilities 
           </h3>
           <div className="text-sm">
             <div className="flex justify-between">
@@ -95,7 +97,7 @@ export default function ModelConfidenceTab({
         {/* Tree consensus */}
         <div className="space-y-1 text-sm">
           <div className="text-xs text-slate-500 uppercase tracking-wide">
-            Ensemble agreement
+            Ensemble agreement (Random Forest)
           </div>
           <div className="text-lg font-semibold text-slate-800">
             {treeConsensusPct.toFixed(0)}%
@@ -153,26 +155,63 @@ export default function ModelConfidenceTab({
       )}
 
       {/* Performance metrics */}
-      <section className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-        <MetricCard label="Accuracy" value={`${metrics.accuracy.toFixed(1)}%`} />
-        <MetricCard
-          label="Sensitivity"
-          value={`${metrics.sensitivity.toFixed(1)}%`}
-        />
-        <MetricCard
-          label="Specificity"
-          value={`${metrics.specificity.toFixed(1)}%`}
-        />
-        <MetricCard label="AUC‑ROC" value={metrics.auc_roc.toFixed(3)} />
-        <MetricCard
-          label="Brier score"
-          value={metrics.brier_score.toFixed(3)}
-        />
-        <MetricCard
-          label="False negative rate"
-          value={`${metrics.false_negative_rate.toFixed(1)}%`}
-        />
-      </section>
+{/* Performance metrics per model (test set) */}
+<section className="mt-4 space-y-2">
+  <h3 className="text-sm font-semibold text-slate-800">
+    Test‑set performance per model
+  </h3>
+  <p className="text-[11px] text-slate-500">
+    Summary metrics on the held‑out test set (not this individual patient).
+  </p>
+
+  <div className="overflow-hidden rounded-lg border border-slate-200 text-xs">
+    <table className="w-full">
+      <thead className="bg-slate-50 text-slate-600">
+        <tr>
+          <th className="px-3 py-2 text-left">Model</th>
+          <th className="px-3 py-2 text-right">Accuracy</th>
+          <th className="px-3 py-2 text-right">Sensitivity</th>
+          <th className="px-3 py-2 text-right">Specificity</th>
+          <th className="px-3 py-2 text-right">AUC‑ROC</th>
+           <th className="px-3 py-2 text-right">Brier score</th>
+            <th className="px-3 py-2 text-right">False Negative Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {[
+          { key: "RF", label: "Random Forest" },
+          { key: "XGB", label: "XGBoost" },
+          { key: "LR", label: "Logistic Regression" },
+        ].map((m) => {
+          const mm = metrics[m.key as keyof ModelMetrics];
+          return (
+            <tr key={m.key} className="border-t border-slate-200">
+              <td className="px-3 py-2">{m.label}</td>
+              <td className="px-3 py-2 text-right">
+                {mm.accuracy.toFixed(1)}%
+              </td>
+              <td className="px-3 py-2 text-right">
+                {mm.sensitivity.toFixed(1)}%
+              </td>
+              <td className="px-3 py-2 text-right">
+                {mm.specificity.toFixed(1)}%
+              </td>
+              <td className="px-3 py-2 text-right">
+                {mm.auc_roc.toFixed(3)}
+              </td>
+              <td className="px-3 py-2 text-right">
+                {mm.brier_score.toFixed(3)}
+              </td>
+              <td className="px-3 py-2 text-right">
+                {mm.false_negative_rate.toFixed(1)}%
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+</section>
 
       {/* Certainty scale */}
       <section className="space-y-2">

@@ -3,9 +3,10 @@ from typing import Dict, Any, List, Optional
 
 import numpy as np
 import joblib
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from summary_generator import summary_generator, FeatureContribution
 import shap
 
 app = FastAPI()
@@ -32,7 +33,10 @@ lr_model = joblib.load("bc_lr_model.pkl")
 
 scaler = joblib.load("scaler.pkl")
 feature_names = np.load("feature_names.npy", allow_pickle=True)  # len = 10
-global_importance = np.load("global_importance.npy", allow_pickle=True).tolist()
+background_scaled = np.load("background_scaled.npy", allow_pickle=True)
+rf_global_importance = np.load("global_importance_rf.npy", allow_pickle=True).tolist()
+xgb_global_importance = np.load("global_importance_xgb.npy", allow_pickle=True).tolist()
+lr_global_importance = np.load("global_importance_lr.npy", allow_pickle=True).tolist()
 
 feature_stats: Dict[str, Dict[str, float]] = np.load(
     "feature_stats.npy", allow_pickle=True
@@ -57,20 +61,11 @@ missing = [f for f in required if f not in feature_index]
 if missing:
     raise ValueError(f"Missing required slider features in feature_names.npy: {missing}")
 
-# SHAP TreeExplainer on RF (your existing explainer)
-background = scaler.transform(
-    np.stack(
-        [
-            benign_baseline,
-            benign_baseline * 0.95,
-            benign_baseline * 1.05,
-            benign_baseline * 0.9,
-            benign_baseline * 1.1,
-        ],
-        axis=0,
-    )
-)
-explainer = shap.TreeExplainer(rf_model, background)
+# SHAP explainers per model
+rf_explainer = shap.TreeExplainer(rf_model, background_scaled)
+xgb_explainer = shap.TreeExplainer(xgb_model, background_scaled)
+# For LR, use LinearExplainer
+lr_explainer = shap.LinearExplainer(lr_model, background_scaled)
 
 # =========================
 # Helper functions
@@ -91,18 +86,35 @@ def predict_proba_single_lr(x_raw: np.ndarray) -> float:
     proba = lr_model.predict_proba(x_scaled)[0][1]  # benign
     return float(proba)
 
-def compute_shap_for_x(x_raw: np.ndarray) -> np.ndarray:
+def compute_shap_for_x(x_raw: np.ndarray, model_key: str = "RF") -> np.ndarray:
+    """
+    Compute SHAP values for a single sample using the chosen model.
+    model_key: "RF", "XGB", or "LR"
+    """
     x_scaled = scaler.transform([x_raw])
-    shap_out = explainer.shap_values(x_scaled)
 
-    if isinstance(shap_out, list):
-        shap_values = shap_out[1][0]  # benign class, first sample
+    model_key = model_key.upper()
+    if model_key == "RF":
+        shap_out = rf_explainer.shap_values(x_scaled)
+    elif model_key == "XGB":
+        shap_out = xgb_explainer.shap_values(x_scaled)
+    elif model_key == "LR":
+        shap_out = lr_explainer.shap_values(x_scaled)
     else:
+        raise ValueError(f"Unknown model_key for SHAP: {model_key}")
+
+    # For tree models, shap_out may be a list [class0, class1]
+    if isinstance(shap_out, list):
+        # Take benign class = 1
+        shap_values = shap_out[1][0]
+    else:
+        # LinearExplainer typically returns a 2D array (n_samples, n_features)
         shap_values = shap_out[0]
 
     shap_values = np.array(shap_values, dtype=float)
     if shap_values.ndim > 1:
         shap_values = shap_values.reshape(-1)
+
     return shap_values
 
 def build_mode_bars(
@@ -179,23 +191,35 @@ def build_mode_bars(
 
     return {"all_bars": top_items, "top5_bars": top_items[:5]}
 
-def build_payload_for_single(x_raw: np.ndarray) -> Dict[str, Any]:
-    # 1) RF prediction (your primary model)
-    benign_prob_rf = predict_proba_single_rf(x_raw)
-    malignant_prob_rf = 1.0 - benign_prob_rf
+def build_payload_for_single(x_raw: np.ndarray, model_key: str = "RF") -> Dict[str, Any]:
+    model_key = model_key.upper()
+
+    # 1) Primary model prediction
+    if model_key == "RF":
+        benign_prob_primary = predict_proba_single_rf(x_raw)
+    elif model_key == "XGB":
+        benign_prob_primary = predict_proba_single_xgb(x_raw)
+    elif model_key == "LR":
+        benign_prob_primary = predict_proba_single_lr(x_raw)
+    else:
+        raise ValueError(f"Unknown model_key: {model_key}")
+
+    malignant_prob_primary = 1.0 - benign_prob_primary
 
     benign_threshold = 0.5
-    prediction_label = "BENIGN" if benign_prob_rf >= benign_threshold else "MALIGNANT"
+    prediction_label = "BENIGN" if benign_prob_primary >= benign_threshold else "MALIGNANT"
 
-    # 2) Additional models
+    # 2) Additional models (unchanged)
+    benign_prob_rf = predict_proba_single_rf(x_raw)
     benign_prob_xgb = predict_proba_single_xgb(x_raw)
     benign_prob_lr = predict_proba_single_lr(x_raw)
 
+    malignant_prob_rf = 1.0 - benign_prob_rf
     malignant_prob_xgb = 1.0 - benign_prob_xgb
     malignant_prob_lr = 1.0 - benign_prob_lr
 
     # 3) SHAP explanation from RF (unchanged)
-    shap_vec = compute_shap_for_x(x_raw)
+    shap_vec = compute_shap_for_x(x_raw, model_key=model_key)
     bars_data = build_mode_bars(x_raw, shap_vec, k=10)
     all_bars = bars_data["all_bars"]
     top5_bars = bars_data["top5_bars"]
@@ -219,21 +243,45 @@ def build_payload_for_single(x_raw: np.ndarray) -> Dict[str, Any]:
 
     mode2 = {"bars": top5_bars, "bullets": [b["plain_text"] for b in top5_bars]}
 
-    top_feat_names = [b["feature"] for b in all_bars[:3]]
-    if prediction_label == "MALIGNANT":
-        summary = (
-            "This tumor is predicted as MALIGNANT. "
-            f"The most influential features are {', '.join(top_feat_names)}. "
-            "Their values push the model's estimate toward malignancy."
-        )
-    else:
-        summary = (
-            "This tumor is predicted as BENIGN. "
-            f"The most influential features are {', '.join(top_feat_names)}, "
-            "which resemble benign cases in the training data."
-        )
+     # 3b) Clinical narrative summary using ClinicalSummaryGenerator
+    # Determine prediction string and confidence
+    prediction_str = "benign" if prediction_label == "BENIGN" else "malignant"
+    confidence = benign_prob_primary * 100.0 if prediction_label == "BENIGN" else malignant_prob_primary * 100.0
 
-    mode3 = {"bars": all_bars, "summary": summary}
+    # Build FeatureContribution list from top5_bars
+    top_features_for_summary: List[FeatureContribution] = []
+    for idx, bar in enumerate(top5_bars):
+        # Map direction: SHAP "toward_malignant" -> "up", "toward_benign" -> "down"
+        direction = "up" if bar["direction"] == "toward_malignant" else "down"
+
+        fc = FeatureContribution(
+            name=str(bar["feature"]),
+            value=float(bar["observed"]),
+            impact=float(bar["percent"]),
+            direction=direction,           # type: ignore[arg-type]
+            is_primary=(idx < 3),          # top 3 as primary
+        )
+        top_features_for_summary.append(fc)
+
+    # Build feature_values dict keyed by raw feature names
+    feature_values: Dict[str, float] = {}
+    for name in feature_names:
+        fname = str(name)
+        idx = feature_index[fname]
+        feature_values[fname] = float(x_raw[idx])
+
+    clinical_summary = summary_generator.generate_summary(
+        prediction=prediction_str,
+        confidence=confidence,
+        top_features=top_features_for_summary,
+        feature_values=feature_values,
+    )
+        
+    mode1 = {
+    "cards": mode1_cards,
+    "summary": clinical_summary,
+}
+    mode3 = {"bars": all_bars}
 
     # 4) Per‑model comparison block
     model_comparisons = [
@@ -259,9 +307,9 @@ def build_payload_for_single(x_raw: np.ndarray) -> Dict[str, Any]:
 
     return {
         "prediction_label": prediction_label,
-        "malignant_probability": float(malignant_prob_rf),
-        "benign_probability": float(benign_prob_rf),
-        "mode1": {"cards": mode1_cards},
+        "malignant_probability": float(malignant_prob_primary),
+        "benign_probability": float(benign_prob_primary),
+        "mode1": mode1,
         "mode2": mode2,
         "mode3": mode3,
         "model_comparisons": model_comparisons,
@@ -283,6 +331,7 @@ class PredictRequest(BaseModel):
     worst_concave_points: float
     worst_concavity: float
     explanationMode: Optional[str] = None
+    model: Optional[str] = "RF" 
 
 class PredictResponse(BaseModel):
     prediction_label: str
@@ -312,8 +361,18 @@ def predict(req: PredictRequest):
     x_raw[IDX_WORST_AREA] = req.worst_area
     x_raw[IDX_WORST_CP] = req.worst_concave_points
     x_raw[IDX_WORST_CONCAVITY] = req.worst_concavity
-    return build_payload_for_single(x_raw)
+    
+    model_key = (req.model or "RF").upper()
+    return build_payload_for_single(x_raw, model_key=model_key)
 
 @app.get("/global_importance", response_model=List[GlobalFeature])
-def get_global_importance():
-    return global_importance
+def get_global_importance(model: str = "RF"):
+    model = model.upper()
+    if model == "RF":
+        return rf_global_importance
+    elif model == "XGB":
+        return xgb_global_importance
+    elif model == "LR":
+        return lr_global_importance
+    else:
+        raise HTTPException(status_code=400, detail="Unknown model")

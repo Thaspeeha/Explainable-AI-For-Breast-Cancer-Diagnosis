@@ -13,9 +13,10 @@ interface Props {
   onTabChange: (tab: TabType) => void;
   result: PredictionResponse | null;
   patientId: string; 
+   selectedModel: "RF" | "XGB" | "LR";
 }
 
-export default function TopNav({ activeTab, onTabChange, result, patientId }: Props) {
+export default function TopNav({ activeTab, onTabChange, result, patientId, selectedModel }: Props) {
   const { data: session, status } = useSession();
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -38,6 +39,13 @@ export default function TopNav({ activeTab, onTabChange, result, patientId }: Pr
     { key: "features", label: "Feature Importance", icon: "📊" },
     { key: "confidence", label: "Model Confidence", icon: "🎲" },
   ];
+
+  const primaryModelLabel =
+  selectedModel === "RF"
+    ? "Random Forest"
+    : selectedModel === "XGB"
+    ? "XGBoost"
+    : "Logistic Regression";
 
   async function handleConfirmExport() {
   if (!result) {
@@ -65,13 +73,14 @@ export default function TopNav({ activeTab, onTabChange, result, patientId }: Pr
       "",
       "AI Prediction",
       "-------------",
+      `- Primary model: ${primaryModelLabel}`,
       `- Prediction label: ${result.prediction_label}`,
       `- Malignancy probability: ${malignantPct}%`,
       `- Benign probability: ${benignPct}%`,
       "",
       "Explanation Summary",
       "-------------------",
-      `- Summary: ${result.mode3?.summary || "Not available."}`,
+      `- Summary: ${result.mode1?.summary || "Not available."}`,
       "",
       "Disclaimer: This AI output is for decision support only and is not a substitute for professional clinical judgment.",
     ];
