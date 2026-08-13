@@ -1,4 +1,4 @@
-# 🧬 Explainable-AI-For-Breast-Cancer-Diagnosis
+# 🧬 Explainable AI for Breast Cancer Diagnosis
 
 An **Explainable Artificial Intelligence (XAI) decision-support prototype** for breast cancer diagnosis using machine learning and SHAP-based explanations.
 
@@ -12,7 +12,7 @@ The system combines a **FastAPI backend**, **Next.js + TypeScript frontend**, tr
 
 Machine-learning models can achieve high classification performance on breast cancer datasets, but their predictions can be difficult to interpret.
 
-This project explores how **Explainable AI (XAI)** can make machine-learning predictions more transparent by showing **which features contributed to a prediction and in which direction**.
+This project explores how **Explainable AI (XAI)** can make machine-learning predictions more transparent by showing which features contributed to a prediction and in which direction.
 
 The application uses the **Breast Cancer Wisconsin (Diagnostic) — WDBC dataset**, which contains:
 
@@ -111,7 +111,7 @@ The application includes:
 
 ## 🏗️ System Architecture
 
-```text
+~~~text
                     ┌──────────────────────────┐
                     │      Next.js Frontend    │
                     │     TypeScript / CSS     │
@@ -124,11 +124,11 @@ The application includes:
                     │      FastAPI Backend     │
                     │         Python           │
                     ├──────────────────────────┤
-                    │ Prediction API           │
-                    │ Model Selection          │
+                    │ Prediction API            │
+                    │ Model Selection           │
                     │ Preprocessing             │
                     │ SHAP Explanations        │
-                    │ Summary Generation       │
+                    │ Summary Generation        │
                     └────────────┬─────────────┘
                                  │
               ┌──────────────────┼──────────────────┐
@@ -151,8 +151,8 @@ The application includes:
                     │      MongoDB Atlas       │
                     │ Authentication / Config  │
                     └──────────────────────────┘
-```text
-                    
+~~~
+
 ---
 
 ## 🧰 Tech Stack
@@ -249,7 +249,7 @@ This allows users to understand **why** a prediction was produced instead of see
 
 ## 📊 Dashboard Sections
 
-```text
+~~~text
 Dashboard
 │
 ├── Prediction
@@ -273,7 +273,7 @@ Dashboard
 │
 └── Report Export
     └── Diagnostic PDF
-```text
+~~~
 
 ---
 
@@ -291,23 +291,26 @@ The project uses the **Breast Cancer Wisconsin (Diagnostic) — WDBC dataset**.
 
 The 30 features are generated from 10 nuclear measurements:
 
-- Radius
-- Texture
-- Perimeter
-- Area
-- Smoothness
-- Compactness
-- Concavity
-- Points
-- Symmetry
-- Fractal Dimension
-
+~~~text
+Radius
+Texture
+Perimeter
+Area
+Smoothness
+Compactness
+Concavity
+Concave Points
+Symmetry
+Fractal Dimension
+~~~
 
 Each measurement contains:
 
-- Mean
-- Standard Error
-- Worst
+~~~text
+Mean
+Standard Error
+Worst
+~~~
 
 resulting in 30 numerical features.
 
@@ -315,7 +318,7 @@ resulting in 30 numerical features.
 
 ## 🔄 Application Workflow
 
-```text
+~~~text
 User Login
      │
      ▼
@@ -351,7 +354,7 @@ Model Confidence
      │
      ▼
 Export Diagnosis Report
-```text
+~~~
 
 ---
 
@@ -361,7 +364,7 @@ The backend is implemented as a REST-style FastAPI service.
 
 Core functionality includes:
 
-```text
+~~~text
 FastAPI
 │
 ├── Request Validation
@@ -380,7 +383,7 @@ FastAPI
 │
 └── Explanation Summary
     └── summary_generator
-```text
+~~~
 
 The trained models and preprocessing components are loaded by the backend when the application starts.
 
@@ -401,10 +404,9 @@ Uvicorn is used as the ASGI server.
 
 ---
 
-
 ## 📂 Project Structure
 
-```text
+~~~text
 explainable-ai-breast-cancer/
 │
 ├── backend/
@@ -428,7 +430,7 @@ explainable-ai-breast-cancer/
 ├── reports/
 │
 └── README.md
-```text
+~~~
 
 > Adjust this structure to match your actual repository.
 
@@ -509,27 +511,29 @@ Potential future improvements include:
 
 ## 🛠️ Skills Demonstrated
 
-- Python
-- FastAPI
-- REST APIs
-- Next.js
-- TypeScript
-- Machine Learning
-- Scikit-learn
-- XGBoost
-- Random Forest
-- Logistic Regression
-- SHAP
-- LIME
-- Pandas
-- NumPy
-- MongoDB Atlas
-- Docker
-- Git & GitHub
-- Explainable AI
-- Data Analysis
-- Model Evaluation
-- Full-Stack Development
+~~~text
+Python
+FastAPI
+REST APIs
+Next.js
+TypeScript
+Machine Learning
+Scikit-learn
+XGBoost
+Random Forest
+Logistic Regression
+SHAP
+LIME
+Pandas
+NumPy
+MongoDB Atlas
+Docker
+Git & GitHub
+Explainable AI
+Data Analysis
+Model Evaluation
+Full-Stack Development
+~~~
 
 ---
 
@@ -549,7 +553,7 @@ It has not undergone clinical validation, regulatory approval, or formal clinici
 
 This project demonstrates the integration of:
 
-```text
+~~~text
 Machine Learning
        ↓
 FastAPI Backend
@@ -561,6 +565,6 @@ Next.js Dashboard
 MongoDB Atlas
        ↓
 Report Export
-```text
+~~~
 
 The result is an interactive decision-support prototype that combines **prediction, explainability, model comparison, authentication and report generation** in a single full-stack application.
