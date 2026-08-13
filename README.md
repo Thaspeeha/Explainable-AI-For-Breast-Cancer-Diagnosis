@@ -151,6 +151,7 @@ The application includes:
                     │      MongoDB Atlas       │
                     │ Authentication / Config  │
                     └──────────────────────────┘
+
 ---
 
 ## 🧰 Tech Stack
@@ -247,7 +248,6 @@ This allows users to understand **why** a prediction was produced instead of see
 
 ## 📊 Dashboard Sections
 
-~~~text
 Dashboard
 │
 ├── Prediction
