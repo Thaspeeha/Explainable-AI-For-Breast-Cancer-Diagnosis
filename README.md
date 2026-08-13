@@ -151,7 +151,7 @@ The application includes:
                     │      MongoDB Atlas       │
                     │ Authentication / Config  │
                     └──────────────────────────┘
-
+                    
 ---
 
 ## 🧰 Tech Stack
@@ -248,6 +248,7 @@ This allows users to understand **why** a prediction was produced instead of see
 
 ## 📊 Dashboard Sections
 
+~~~text
 Dashboard
 │
 ├── Prediction
@@ -289,26 +290,23 @@ The project uses the **Breast Cancer Wisconsin (Diagnostic) — WDBC dataset**.
 
 The 30 features are generated from 10 nuclear measurements:
 
-~~~text
-Radius
-Texture
-Perimeter
-Area
-Smoothness
-Compactness
-Concavity
-Concave Points
-Symmetry
-Fractal Dimension
-~~~
+- Radius
+- Texture
+- Perimeter
+- Area
+- Smoothness
+- Compactness
+- Concavity
+- Points
+- Symmetry
+- Fractal Dimension
+
 
 Each measurement contains:
 
-~~~text
-Mean
-Standard Error
-Worst
-~~~
+- Mean
+- Standard Error
+- Worst
 
 resulting in 30 numerical features.
 
@@ -510,29 +508,27 @@ Potential future improvements include:
 
 ## 🛠️ Skills Demonstrated
 
-~~~text
-Python
-FastAPI
-REST APIs
-Next.js
-TypeScript
-Machine Learning
-Scikit-learn
-XGBoost
-Random Forest
-Logistic Regression
-SHAP
-LIME
-Pandas
-NumPy
-MongoDB Atlas
-Docker
-Git & GitHub
-Explainable AI
-Data Analysis
-Model Evaluation
-Full-Stack Development
-~~~
+- Python
+- FastAPI
+- REST APIs
+- Next.js
+- TypeScript
+- Machine Learning
+- Scikit-learn
+- XGBoost
+- Random Forest
+- Logistic Regression
+- SHAP
+- LIME
+- Pandas
+- NumPy
+- MongoDB Atlas
+- Docker
+- Git & GitHub
+- Explainable AI
+- Data Analysis
+- Model Evaluation
+- Full-Stack Development
 
 ---
 
