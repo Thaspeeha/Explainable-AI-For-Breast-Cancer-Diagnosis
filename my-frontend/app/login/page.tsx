@@ -45,6 +45,21 @@ export default function LoginPage() {
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="w-full max-w-sm rounded-xl border bg-white p-6 shadow-sm"
       >
+         {/* Project title */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="text-center space-y-1"
+        >
+          <h1 className="text-xl font-semibold text-slate-900">
+            Explainable AI for Breast Cancer Diagnosis
+          </h1>
+          <p className="text-xs text-slate-500">
+            Prototype clinical decision-support dashboard.
+          </p>
+        </motion.div>
+
         <motion.h1
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}

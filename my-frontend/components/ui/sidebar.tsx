@@ -526,8 +526,10 @@ export function Sidebar({
           {openSections.model && (
             <div className="rounded-md bg-slate-50 border border-slate-200 px-3 py-2 text-[11px] space-y-1 text-slate-700">
               <div>Dataset: Wisconsin Breast Cancer (569 samples, 30 features)</div>
-              <div>Accuracy: 97.4% · Sensitivity: 97.1% · Specificity: 97.6%</div>
-              <div>AUC‑ROC: 0.996 · Brier score: 0.024 · FNR: 2.9%</div>
+              <div>RANDOM FOREST</div>
+              <div>Accuracy: 94.74% · Sensitivity: 95.83% · Specificity: 92.86%</div>
+              <div>AUC‑ROC: 0.992 · Brier score: 0.0324 · FNR: 4.17%</div>
+              <div>FOR MORE INFO ON OTHER MODELS, GO TO MODEL CONFIDENCE</div>
               <div className="text-[10px] text-slate-500 pt-1">
                 Last calibration: Mar 2026 · Decision support only; final diagnosis
                 by clinician.
