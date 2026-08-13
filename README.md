@@ -151,6 +151,7 @@ The application includes:
                     │      MongoDB Atlas       │
                     │ Authentication / Config  │
                     └──────────────────────────┘
+```text
                     
 ---
 
@@ -248,7 +249,7 @@ This allows users to understand **why** a prediction was produced instead of see
 
 ## 📊 Dashboard Sections
 
-~~~text
+```text
 Dashboard
 │
 ├── Prediction
@@ -272,7 +273,7 @@ Dashboard
 │
 └── Report Export
     └── Diagnostic PDF
-~~~
+```text
 
 ---
 
@@ -314,7 +315,7 @@ resulting in 30 numerical features.
 
 ## 🔄 Application Workflow
 
-~~~text
+```text
 User Login
      │
      ▼
@@ -350,7 +351,7 @@ Model Confidence
      │
      ▼
 Export Diagnosis Report
-~~~
+```text
 
 ---
 
@@ -360,7 +361,7 @@ The backend is implemented as a REST-style FastAPI service.
 
 Core functionality includes:
 
-~~~text
+```text
 FastAPI
 │
 ├── Request Validation
@@ -379,7 +380,7 @@ FastAPI
 │
 └── Explanation Summary
     └── summary_generator
-~~~
+```text
 
 The trained models and preprocessing components are loaded by the backend when the application starts.
 
@@ -403,7 +404,7 @@ Uvicorn is used as the ASGI server.
 
 ## 📂 Project Structure
 
-~~~text
+```text
 explainable-ai-breast-cancer/
 │
 ├── backend/
@@ -427,7 +428,7 @@ explainable-ai-breast-cancer/
 ├── reports/
 │
 └── README.md
-~~~
+```text
 
 > Adjust this structure to match your actual repository.
 
@@ -548,7 +549,7 @@ It has not undergone clinical validation, regulatory approval, or formal clinici
 
 This project demonstrates the integration of:
 
-~~~text
+```text
 Machine Learning
        ↓
 FastAPI Backend
@@ -560,6 +561,6 @@ Next.js Dashboard
 MongoDB Atlas
        ↓
 Report Export
-~~~
+```text
 
 The result is an interactive decision-support prototype that combines **prediction, explainability, model comparison, authentication and report generation** in a single full-stack application.
