@@ -1,11 +1,7 @@
 # 🧬 Explainable AI for Breast Cancer Diagnosis
 
 <p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Poppins&size=24&duration=3000&pause=1000&color=36BCF7&center=true&vCenter=true&width=700&lines=Computer+Science+Student;Aspiring+AI+%26+Software+Engineer;AI+Enthusiast+%26+Builder;Always+Learning+Something+New+🚀" />
-</p>
-
-<p align="center">
-  <strong>Machine Learning × Explainable AI × Full-Stack Development</strong>
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=2500&pause=800&color=00D9FF&center=true&vCenter=true&width=850&lines=Machine+Learning+%C3%97+Explainable+AI;SHAP+%C3%97+FastAPI+%C3%97+Next.js;Predict.+Explain.+Understand.;Building+Transparent+AI+Systems." alt="Animated project tagline">
 </p>
 
 <p align="center">
@@ -547,8 +543,3 @@ Report Export
 
 The result is an interactive decision-support prototype that combines **prediction, explainability, model comparison, authentication and report generation** in a single full-stack application.
 
----
-
-<p align="center">
-  <img src="my-frontend/public/hero-section-prediction.png" alt="Explainable AI prediction dashboard" width="900">
-</p>
