@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  An interactive decision-support prototype that combines ML predictions with human-readable SHAP explanations.
+  An interactive clinical decision-support prototype that combines ML predictions with human-readable SHAP explanations.
 </p>
 
 <p align="center">
@@ -49,90 +49,20 @@ But...
 
 ## ⚡ Project at a Glance
 
-| 🧠 Intelligence | 🔎 Explainability | ⚙️ Backend |
-|---|---|---|
-| XGBoost · RF · LR | SHAP · LIME | FastAPI · Python |
-
-| 🎨 Interface | 🗄️ Data | 🐳 Infrastructure |
-|---|---|---|
-| Next.js · TypeScript | MongoDB Atlas | Docker |
+| 🧠 Intelligence | 🔎 Explainability | ⚙️ Backend | 🎨 Interface | 🗄️ Data | 🐳 Infrastructure |
+|---|---|---|---|---|---|
+| XGBoost · RF · LR | SHAP · LIME | FastAPI · Python | Next.js · TypeScript | MongoDB Atlas | Docker |
 
 ---
 
 ## ✨ Features
 
-### 🤖 Machine Learning
-
-- Breast tumour classification
-- Benign vs malignant prediction
-- Random Forest
-- XGBoost
-- Logistic Regression
-- Model comparison
-- Multiple evaluation metrics
-- Serialized models loaded through the FastAPI backend
-
-### 🔍 Explainable AI
-
-The application uses **SHAP (SHapley Additive exPlanations)** to explain model predictions.
-
-It provides:
-
-- Global feature importance
-- Local/case-level explanations
-- Feature contribution values
-- Prediction-driving features
-- Malignancy vs benignity contribution direction
-- Human-readable explanation summaries
-
-### 📊 Prediction Dashboard
-
-The frontend provides:
-
-- Feature input controls
-- Prediction results
-- Malignancy probability
-- Benign probability
-- Multiple explanation modes
-- Feature importance analysis
-- Model confidence analysis
-- Model comparison
-- Report export
-
-### 📈 Model Confidence
-
-The Model Confidence section provides:
-
-- Accuracy
-- Sensitivity
-- Specificity
-- AUC-ROC
-- Brier Score
-- False Negative Rate
-- Confusion matrices
-- Model agreement/disagreement
-
-### 📄 Report Export
-
-Users can generate a structured diagnosis report containing:
-
-- Primary model
-- Predicted classification
-- Malignancy probability
-- Benign probability
-- Generated explanation summary
-- Decision-support disclaimer
-
-### 🔐 Authentication
-
-The application includes:
-
-- User signup
-- User login
-- Protected dashboard routes
-- MongoDB Atlas authentication storage
-- IP access restrictions
-- TLS-secured database connections
+- 🤖 **Machine Learning** — Random Forest, XGBoost & Logistic Regression
+- 🔍 **Explainable AI** — Global & local SHAP explanations
+- 📊 **Interactive Dashboard** — Predictions, probabilities & feature analysis
+- 📈 **Model Evaluation** — Accuracy, Sensitivity, Specificity, AUC-ROC & Brier Score
+- 📄 **Report Export** — Prediction, explanation & decision-support summary
+- 🔐 **Authentication** — Protected routes with MongoDB Atlas
 
 ---
 
@@ -200,6 +130,8 @@ The application includes:
 
 [![Scikit-learn](https://img.shields.io/badge/Scikit--learn-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![XGBoost](https://img.shields.io/badge/XGBoost-EC5C2E?style=flat-square)](https://xgboost.readthedocs.io/)
+[![Random Forest](https://img.shields.io/badge/Random%20Forest-2E8B57?style=flat-square)](https://scikit-learn.org/stable/modules/ensemble.html#random-forests)
+[![Logistic Regression](https://img.shields.io/badge/Logistic%20Regression-6A5ACD?style=flat-square)](https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression)
 [![SHAP](https://img.shields.io/badge/SHAP-Explainable_AI-purple?style=flat-square)](https://shap.readthedocs.io/)
 [![LIME](https://img.shields.io/badge/LIME-Explainable_AI-blue?style=flat-square)](https://lime-ml.readthedocs.io/)
 [![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat-square&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
