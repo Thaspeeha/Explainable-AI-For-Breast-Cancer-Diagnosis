@@ -1,34 +1,39 @@
 # 🧬 Explainable AI for Breast Cancer Diagnosis
 
-An **Explainable Artificial Intelligence (XAI) decision-support prototype** for breast cancer diagnosis using machine learning and SHAP-based explanations.
+<p align="center">
+  <strong>Machine Learning × Explainable AI × Full-Stack Development</strong>
+</p>
 
-The system combines a **FastAPI backend**, **Next.js + TypeScript frontend**, trained machine-learning models, **SHAP explainability**, and **MongoDB Atlas authentication** into an interactive web application.
+<p align="center">
+  An interactive decision-support prototype that combines ML predictions with human-readable SHAP explanations.
+</p>
 
-> ⚠️ **Disclaimer:** This project is an academic research prototype and is **not intended for real clinical diagnosis or medical decision-making**. Predictions should not be used as a substitute for professional clinical judgement.
+## ✨ What is this?
+
+Machine-learning models can make highly accurate predictions, but understanding **why** a model made a particular prediction can be difficult.
+
+This project explores **Explainable AI (XAI)** by combining machine learning with SHAP-based explanations to provide both:
+
+> **A prediction + an explanation of the prediction**
+
+The application classifies breast tumour cases as **benign or malignant** using the Breast Cancer Wisconsin Diagnostic (WDBC) dataset and provides interactive visual explanations of the model's decision.
+
+> ⚠️ **Important:** This is an academic proof-of-concept and is **not intended for clinical diagnosis or medical decision-making**.
 
 ---
 
-## 📌 Overview
+## ⚡ Project at a Glance
 
-Machine-learning models can achieve high classification performance on breast cancer datasets, but their predictions can be difficult to interpret.
-
-This project explores how **Explainable AI (XAI)** can make machine-learning predictions more transparent by showing which features contributed to a prediction and in which direction.
-
-The application uses the **Breast Cancer Wisconsin (Diagnostic) — WDBC dataset**, which contains:
-
-- 569 cases
-- 357 benign cases
-- 212 malignant cases
-- 30 numerical predictive features
-- Features derived from measurements of cell nuclei obtained from digitised FNA samples
-
-The prototype evaluates three machine-learning models:
-
-- 🌲 Random Forest
-- 🚀 XGBoost
-- 📈 Logistic Regression
-
-SHAP is used to provide both **global feature importance** and **individual case-level explanations**.
+| | |
+|---|---|
+| 🧠 **Models** | Random Forest · XGBoost · Logistic Regression |
+| 🔎 **XAI** | SHAP · LIME |
+| 🎨 **Frontend** | Next.js · TypeScript |
+| ⚙️ **Backend** | FastAPI · Python |
+| 🗄️ **Database** | MongoDB Atlas |
+| 🐳 **Deployment** | Docker |
+| 📊 **Dataset** | WDBC |
+| 📄 **Output** | Prediction + Explanation + Report |
 
 ---
 
@@ -159,37 +164,31 @@ The application includes:
 
 ### Frontend
 
-- Next.js
-- TypeScript
-- CSS
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![CSS](https://img.shields.io/badge/CSS-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
 ### Backend
 
-- Python
-- FastAPI
-- Pydantic
-- Uvicorn
-- NumPy
-- Pandas
-- Joblib
+[![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Uvicorn](https://img.shields.io/badge/Uvicorn-499848?style=flat-square)](https://www.uvicorn.org/)
 
-### Machine Learning
+### Machine Learning & XAI
 
-- Scikit-learn
-- XGBoost
-- Random Forest
-- Logistic Regression
-- SHAP
-- LIME
-- TensorFlow-CPU
+[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![XGBoost](https://img.shields.io/badge/XGBoost-EC5C2E?style=flat-square)](https://xgboost.readthedocs.io/)
+[![SHAP](https://img.shields.io/badge/SHAP-Explainable_AI-purple?style=flat-square)](https://shap.readthedocs.io/)
+[![LIME](https://img.shields.io/badge/LIME-Explainable_AI-blue?style=flat-square)](https://lime-ml.readthedocs.io/)
+[![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat-square&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
+[![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat-square&logo=numpy&logoColor=white)](https://numpy.org/)
 
 ### Database & Infrastructure
 
-- MongoDB Atlas
-- Docker
-- TLS
-- IP Access List
-- Google Colab
+[![MongoDB](https://img.shields.io/badge/MongoDB_Atlas-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)](https://git-scm.com/)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/)
 
 ---
 
@@ -213,6 +212,27 @@ Three supervised learning models were trained and evaluated:
 - AUC-ROC: **0.994**
 - Brier Score: **0.0275**
 - False Negative Rate: **1.39%**
+
+---
+
+## 🔍 Why Explainable AI?
+
+Traditional ML:
+
+> **Prediction → Malignant**
+
+Explainable AI:
+
+> **Prediction → Malignant**
+>
+> ↳ Radius increased the prediction  
+> ↳ Concavity increased the prediction  
+> ↳ Perimeter increased the prediction  
+> ↳ Texture contributed less
+
+### The goal
+
+**Don't just predict. Explain.**
 
 ---
 
@@ -277,50 +297,15 @@ Dashboard
 
 ---
 
-## 📸 Application Preview
+## ✨ Feature Gallery
 
-### Prediction Dashboard
+| Prediction | Explainability |
+|---|---|
+| ![Hero section prediction dashboard](my-frontend/public/hero-section-prediction.png) | <img src="my-frontend/public/explanation.png" width="450"> |
 
-![Hero section prediction dashboard](my-frontend/public/hero-section-prediction.png)
-
----
-
-## 📁 Dataset
-
-The project uses the **Breast Cancer Wisconsin (Diagnostic) — WDBC dataset**.
-
-### Dataset Summary
-
-- **569 samples**
-- **357 benign**
-- **212 malignant**
-- **30 predictive features**
-- Binary classification task
-
-The 30 features are generated from 10 nuclear measurements:
-
-~~~text
-Radius
-Texture
-Perimeter
-Area
-Smoothness
-Compactness
-Concavity
-Concave Points
-Symmetry
-Fractal Dimension
-~~~
-
-Each measurement contains:
-
-~~~text
-Mean
-Standard Error
-Worst
-~~~
-
-resulting in 30 numerical features.
+| Model Confidence | Report |
+|---|---|
+| <img src="my-frontend/public/confidence.png" width="450"> | <img src="my-frontend/public/report.png" width="450"> |
 
 ---
 
@@ -397,21 +382,6 @@ The trained models and preprocessing components are loaded by the backend when t
 
 ---
 
-## 🐳 Docker
-
-The FastAPI backend can be containerised using Docker.
-
-The Docker environment packages:
-
-- Python runtime
-- Required dependencies
-- FastAPI application
-- Machine-learning components
-
-Uvicorn is used as the ASGI server.
-
----
-
 ## 📂 Project Structure
 
 ~~~text
@@ -441,22 +411,6 @@ explainable-ai-breast-cancer/
 ~~~
 
 > Adjust this structure to match your actual repository.
-
----
-
-## 🧪 Model Evaluation
-
-The models were evaluated using:
-
-- Accuracy
-- Sensitivity
-- Specificity
-- AUC-ROC
-- Brier Score
-- False Negative Rate
-- Confusion Matrices
-
-The prototype was also tested through end-to-end prediction and explanation workflows using the local Next.js + FastAPI application.
 
 ---
 
@@ -542,6 +496,18 @@ Data Analysis
 Model Evaluation
 Full-Stack Development
 ~~~
+
+---
+
+## 🎯 What This Project Demonstrates
+
+- 🧠 Building and evaluating machine-learning models
+- 🔎 Making ML predictions interpretable using SHAP
+- ⚙️ Designing REST APIs with FastAPI
+- 🎨 Building interactive dashboards with Next.js
+- 🗄️ Integrating MongoDB Atlas
+- 🐳 Containerising applications with Docker
+- 📊 Communicating model performance visually
 
 ---
 
