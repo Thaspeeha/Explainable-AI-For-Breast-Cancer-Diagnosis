@@ -239,12 +239,12 @@ The application includes:
 ### Why did the model make this prediction?
 
 <p align="center">
-  <img src="my-frontend/public/shap-example.png" width="850">
+  <img src="my-frontend/public/hero-section-prediction.png" width="850">
 </p>
 
 The model doesn't simply return:
 
-> **Malignant — 94%**
+> **Malignant — 56.3%**
 
 It also identifies the features contributing to that prediction.
 
@@ -293,11 +293,11 @@ This allows users to understand **why** a prediction was produced instead of see
 
 | Prediction | Explainability |
 |---|---|
-| ![Hero section prediction dashboard](my-frontend/public/hero-section-prediction.png) | <img src="my-frontend/public/explanation.png" width="450"> |
+| ![Hero section prediction dashboard](my-frontend/public/hero-section-prediction.png) | ![Explainability section](my-frontend/public/Explainability.png) |
 
 | Model Confidence | Report |
 |---|---|
-| <img src="my-frontend/public/confidence.png" width="450"> | <img src="my-frontend/public/report.png" width="450"> |
+| ![Model Confidence section](my-frontend/public/model-confidence.png) | ![Diagnosis Export Report](my-frontend/public/diagnosis-report.png) |
 
 ---
 
