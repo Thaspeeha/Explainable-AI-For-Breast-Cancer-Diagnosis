@@ -5,22 +5,47 @@
 </p>
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=rect&color=00D9FF&height=2&section=header&animation=fadeIn" width="70%">
+  ──────────────── ✦ ────────────────
 </p>
 
 <p align="center">
   An interactive decision-support prototype that combines ML predictions with human-readable SHAP explanations.
 </p>
 
-## ✨ What is this?
+<p align="center">
+  <img src="https://img.shields.io/badge/Machine%20Learning-00D9FF?style=for-the-badge&logoColor=white">
+  <img src="https://img.shields.io/badge/Explainable%20AI-7B61FF?style=for-the-badge">
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white">
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white">
+</p>
 
-Machine-learning models can make highly accurate predictions, but understanding **why** a model made a particular prediction can be difficult.
+## 🧠 The Problem
 
-This project explores **Explainable AI (XAI)** by combining machine learning with SHAP-based explanations to provide both:
+### Traditional ML
 
-> **A prediction + an explanation of the prediction**
+**Prediction**
 
-The application classifies breast tumour cases as **benign or malignant** using the Breast Cancer Wisconsin Diagnostic (WDBC) dataset and provides interactive visual explanations of the model's decision.
+`Patient Features → Model → Malignant`
+
+But...
+
+**Why?**
+
+---
+
+### Explainable AI
+
+`Patient Features`
+↓
+`ML Model`
+↓
+`Prediction`
+↓
+`SHAP`
+↓
+`Feature Contributions`
+↓
+`Human-readable Explanation`
 
 > ⚠️ **Important:** This is an academic proof-of-concept and is **not intended for clinical diagnosis or medical decision-making**.
 
@@ -28,16 +53,13 @@ The application classifies breast tumour cases as **benign or malignant** using 
 
 ## ⚡ Project at a Glance
 
-| | |
-|---|---|
-| 🧠 **Models** | Random Forest · XGBoost · Logistic Regression |
-| 🔎 **XAI** | SHAP · LIME |
-| 🎨 **Frontend** | Next.js · TypeScript |
-| ⚙️ **Backend** | FastAPI · Python |
-| 🗄️ **Database** | MongoDB Atlas |
-| 🐳 **Deployment** | Docker |
-| 📊 **Dataset** | WDBC |
-| 📄 **Output** | Prediction + Explanation + Report |
+| 🧠 Intelligence | 🔎 Explainability | ⚙️ Backend |
+|---|---|---|
+| XGBoost · RF · LR | SHAP · LIME | FastAPI · Python |
+
+| 🎨 Interface | 🗄️ Data | 🐳 Infrastructure |
+|---|---|---|
+| Next.js · TypeScript | MongoDB Atlas | Docker |
 
 ---
 
@@ -196,48 +218,48 @@ The application includes:
 
 ---
 
-## 🧠 Machine Learning Models
+## 🏆 Model Performance
 
-Three supervised learning models were trained and evaluated:
+<p align="center">
 
-| Model | Accuracy | Sensitivity | Specificity | AUC-ROC | Brier Score | FNR |
-|---|---:|---:|---:|---:|---:|---:|
-| Random Forest | 94.74% | 95.83% | 92.86% | 0.992 | 0.0324 | 4.17% |
-| **XGBoost** | **97.37%** | **98.61%** | **95.24%** | **0.994** | **0.0275** | **1.39%** |
-| Logistic Regression | 93.86% | 93.06% | 95.24% | 0.993 | 0.0385 | 6.94% |
+| Model | Accuracy | Sensitivity | Specificity | AUC |
+|---|---:|---:|---:|---:|
+| Random Forest | 94.74% | 95.83% | 92.86% | 0.992 |
+| **XGBoost** | **97.37%** | **98.61%** | **95.24%** | **0.994** |
+| Logistic Regression | 93.86% | 93.06% | 95.24% | 0.993 |
 
-### 🏆 Best Performing Model
+</p>
 
-**XGBoost** achieved the strongest overall performance in the project's test-set evaluation:
+### 🥇 Best Test-Set Performance
 
-- Accuracy: **97.37%**
-- Sensitivity: **98.61%**
-- Specificity: **95.24%**
-- AUC-ROC: **0.994**
-- Brier Score: **0.0275**
-- False Negative Rate: **1.39%**
+**XGBoost**
+
+`97.37% Accuracy` · `98.61% Sensitivity` · `0.994 AUC-ROC`
 
 ---
 
-## 🔍 Why Explainable AI?
+## 🔎 Explainability with SHAP
 
-Traditional ML:
+### Why did the model make this prediction?
 
-> **Prediction → Malignant**
+<p align="center">
+  <img src="my-frontend/public/shap-example.png" width="850">
+</p>
 
-Explainable AI:
+The model doesn't simply return:
 
-> **Prediction → Malignant**
->
-> ↳ Radius increased the prediction  
-> ↳ Concavity increased the prediction  
-> ↳ Perimeter increased the prediction  
-> ↳ Texture contributed less
+> **Malignant — 94%**
 
-### The goal
+It also identifies the features contributing to that prediction.
 
-**Don't just predict. Explain.**
+| Feature | Influence |
+|---|---|
+| Radius | ↑ Malignant |
+| Concavity | ↑ Malignant |
+| Perimeter | ↑ Malignant |
+| Texture | ↓ Lower influence |
 
+If you already have SHAP plots from your notebook, absolutely put them here.
 ---
 
 ## 🔎 SHAP Explainability
@@ -268,36 +290,6 @@ For an individual case, SHAP identifies which features:
 - Create competing signals in borderline cases
 
 This allows users to understand **why** a prediction was produced instead of seeing only a classification label.
-
----
-
-## 📊 Dashboard Sections
-
-~~~text
-Dashboard
-│
-├── Prediction
-│   ├── Feature Inputs
-│   ├── Model Selection
-│   ├── Diagnosis
-│   └── Probability
-│
-├── SHAP Explanations
-│   ├── Clinical Reasoning
-│   ├── Feature Influence
-│   └── Feature Impact
-│
-├── Feature Importance
-│   └── Global SHAP Analysis
-│
-├── Model Confidence
-│   ├── Performance Metrics
-│   ├── Confusion Matrices
-│   └── Model Agreement
-│
-└── Report Export
-    └── Diagnostic PDF
-~~~
 
 ---
 
@@ -475,43 +467,15 @@ Potential future improvements include:
 
 ---
 
-## 🛠️ Skills Demonstrated
+## 🎯 What I Built
 
-~~~text
-Python
-FastAPI
-REST APIs
-Next.js
-TypeScript
-Machine Learning
-Scikit-learn
-XGBoost
-Random Forest
-Logistic Regression
-SHAP
-LIME
-Pandas
-NumPy
-MongoDB Atlas
-Docker
-Git & GitHub
-Explainable AI
-Data Analysis
-Model Evaluation
-Full-Stack Development
-~~~
-
----
-
-## 🎯 What This Project Demonstrates
-
-- 🧠 Building and evaluating machine-learning models
-- 🔎 Making ML predictions interpretable using SHAP
-- ⚙️ Designing REST APIs with FastAPI
-- 🎨 Building interactive dashboards with Next.js
-- 🗄️ Integrating MongoDB Atlas
-- 🐳 Containerising applications with Docker
-- 📊 Communicating model performance visually
+- 🧠 ML model training & evaluation
+- 🔎 SHAP-based explainability
+- ⚙️ FastAPI REST API
+- 🎨 Next.js dashboard
+- 🗄️ MongoDB authentication
+- 🐳 Docker containerization
+- 📄 Automated report generation
 
 ---
 
@@ -522,28 +486,3 @@ This software is an **academic proof-of-concept** developed for educational and 
 It has not undergone clinical validation, regulatory approval, or formal clinician usability evaluation.
 
 **The predictions and explanations generated by this application must not be used as a substitute for professional medical diagnosis or clinical judgement.**
-
----
-
-## ⭐ Project Highlights
-
-**Machine Learning + Explainable AI + Full-Stack Engineering**
-
-This project demonstrates the integration of:
-
-~~~text
-Machine Learning
-       ↓
-FastAPI Backend
-       ↓
-SHAP Explainability
-       ↓
-Next.js Dashboard
-       ↓
-MongoDB Atlas
-       ↓
-Report Export
-~~~
-
-The result is an interactive decision-support prototype that combines **prediction, explainability, model comparison, authentication and report generation** in a single full-stack application.
-
