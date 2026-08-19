@@ -223,11 +223,11 @@ This allows users to understand **why** a prediction was produced instead of see
 
 ## ✨ Feature Gallery
 
-| Prediction | Explainability |
+| Malignant/Benign Prediction | Explainability |
 |---|---|
 | ![Hero section prediction dashboard](my-frontend/public/hero-section-prediction.png) | ![Explainability section](my-frontend/public/Explainability.png) |
 
-| Model Confidence | Report |
+| Model Confidence | Export Diagnostic Reports |
 |---|---|
 | ![Model Confidence section](my-frontend/public/model-confidence.png) | ![Diagnosis Export Report](my-frontend/public/diagnosis-report.png) |
 
@@ -338,15 +338,13 @@ explainable-ai-breast-cancer/
 
 ---
 
-## 🔒 Security
+## 🔒 Design Approach and Security
 
-MongoDB Atlas was configured using security measures including:
+Designed to go beyond a conventional ML classification system and incorporated security measures using MongoDB Atlas.
 
-- Project-specific database user
-- Limited database privileges
-- IP access list
-- TLS encryption in transit
-- Encryption at rest
+<p align="center">
+  <img src="my-frontend/public/uniqueness-security.png" width="850">
+</p>
 
 The application is currently intended for a controlled local development environment rather than a live internet-facing clinical service.
 
