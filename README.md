@@ -275,11 +275,13 @@ Dashboard
     └── Diagnostic PDF
 ~~~
 
-<p align="center">
-  <img src="my-frontend/public/hero-section-prediction.png" width="420"/>
-  <br/>
-  <em>Bloom Prediction</em>
-</p>
+---
+
+## 📸 Application Preview
+
+### Prediction Dashboard
+
+![Hero section prediction dashboard](my-frontend/public/hero-section-prediction.png)
 
 ---
 
