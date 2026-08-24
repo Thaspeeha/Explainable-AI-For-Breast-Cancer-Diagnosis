@@ -1,7 +1,7 @@
 # 🧬 Explainable AI for Breast Cancer Diagnosis
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=2500&pause=800&color=00D9FF&center=true&vCenter=true&width=850&lines=Machine+Learning+%C3%97+Explainable+AI+%C3%97+Full-Stack+Development;SHAP+%C3%97+FastAPI+%C3%97+Next.js;Predict.+Explain.+Understand.;Building+Transparent+AI+Systems." alt="Animated project tagline">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=2500&pause=800&color=A855F7&center=true&vCenter=true&width=850&lines=Machine+Learning+%C3%97+Explainable+AI+%C3%97+Full-Stack+Development;SHAP+%C3%97+FastAPI+%C3%97+Next.js;Predict.+Explain.+Understand.;Building+Transparent+AI+Systems." alt="Animated project tagline">
 </p>
 
 <p align="center">
@@ -44,6 +44,12 @@ This project combines ML predictions with SHAP-based explanations to show the fe
 | 🧠 Intelligence | 🔎 Explainability | ⚙️ Backend | 🎨 Interface | 🗄️ Data | 🐳 Infrastructure |
 |---|---|---|---|---|---|
 | XGBoost · RF · LR | SHAP · LIME | FastAPI · Python | Next.js · TypeScript | MongoDB Atlas | Docker |
+
+---
+
+## 📊 Dataset
+
+[**Wisconsin Diagnostic Breast Cancer (WDBC) Dataset**](https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data)
 
 ---
 
@@ -166,11 +172,9 @@ This project combines ML predictions with SHAP-based explanations to show the fe
   <img src="my-frontend/public/hero-section-prediction.png" width="850">
 </p>
 
-The model doesn't simply return:
+The model doesn't simply return a classification and probability. SHAP identifies the features contributing to the prediction.
 
 > **Malignant — 56.0%**
-
-The model doesn't simply return a classification and probability. SHAP identifies the features contributing to the prediction.
 
 ### Global Explainability
 
@@ -402,4 +406,8 @@ If you would like to use or adapt any part of this project, please contact me fi
 
 <p align="center">
   ──────────────── ✦ ────────────────
+</p>
+
+<p align="right">
+  <sub>Academic Final Year Project · 2026</sub>
 </p>
