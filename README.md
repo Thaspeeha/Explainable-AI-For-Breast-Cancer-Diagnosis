@@ -47,12 +47,6 @@ This project combines ML predictions with SHAP-based explanations to show the fe
 
 ---
 
-## 📊 Dataset
-
-[**Wisconsin Diagnostic Breast Cancer (WDBC) Dataset**](https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data)
-
----
-
 ## ✨ Features
 
 - 🤖 **Machine Learning** — Random Forest, XGBoost & Logistic Regression
@@ -371,6 +365,8 @@ Potential future improvements include:
 🖼️ [**Project Poster**](my-frontend/public/poster.png)
 
 📄 [**Read Project Documentation**](my-frontend/public/Project_Report.pdf)
+
+📊 [**Wisconsin Diagnostic Breast Cancer (WDBC) Dataset**](https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data)
 
 ---
 
