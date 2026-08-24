@@ -88,13 +88,13 @@ This project combines ML predictions with SHAP-based explanations to show the fe
               └──────────────────┼──────────────────┘
                                  │
                                  ▼
-                           SHAP Explainer
+                           Human-readable Summary
                                  │
                                  ▼
-                    Feature Contributions
+                    Feature Influence
                                  │
                                  ▼
-                    Human-readable Summary
+                    Feature Impact Analysis
 
                     ┌──────────────────────────┐
                     │      MongoDB Atlas       │
