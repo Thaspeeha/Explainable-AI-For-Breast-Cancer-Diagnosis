@@ -196,17 +196,17 @@ It also identifies the features contributing to that prediction.
 
 ## ✨ Feature Gallery
 
-| Malignant/Benign Prediction | Explainability | 
+| Explainability | Feature Importance |
 |---|---|
-| ![Hero section prediction dashboard](my-frontend/public/hero-section-prediction.png) | ![Explainability section](my-frontend/public/explainability.png) |
+| ![Explainability section](my-frontend/public/explainability.png) | ![Feature Importance](my-frontend/public/feature-importance.png) |
 
-| Model Confidence | Export Diagnostic Reports |
+| Model Confidence | Export Diagnostic Report |
 |---|---|
 | ![Model Confidence section](my-frontend/public/model-confidence.png) | ![Diagnosis Export Report](my-frontend/public/diagnosis-report.png) |
 
-| Login/Signup | Feature Importance |
-|---|---|
-| ![Login Signup](my-frontend/public/login-signup.png) | ![Feature Importance](my-frontend/public/feature-importance.png) |
+| Login/Signup | 
+|---|
+| ![Login Signup](my-frontend/public/login-signup.png) |
 ---
 
 ## 🔄 Application Workflow
