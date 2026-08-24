@@ -1,19 +1,24 @@
 # 🧬 Explainable AI for Breast Cancer Diagnosis
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=2500&pause=800&color=00D9FF&center=true&vCenter=true&width=850&lines=Machine+Learning+%C3%97+Explainable+AI+%C3%97+Fullstack+Development;SHAP+%C3%97+FastAPI+%C3%97+Next.js;Predict.+Explain.+Understand.;Building+Transparent+AI+Systems." alt="Animated project tagline">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=2500&pause=800&color=00D9FF&center=true&vCenter=true&width=850&lines=Machine+Learning+%C3%97+Explainable+AI+%C3%97+Full-Stack+Development;SHAP+%C3%97+FastAPI+%C3%97+Next.js;Predict.+Explain.+Understand.;Building+Transparent+AI+Systems." alt="Animated project tagline">
 </p>
 
 <p align="center">
-  An interactive clinical decision-support prototype that combines ML predictions with human-readable SHAP explanations.
+  An explainable decision-support prototype: a system where clinicians can see predictions, understand why the model decided that way, compare multiple algorithms on the same patient, and export a structured report.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Machine%20Learning-00D9FF?style=for-the-badge&logoColor=white">
+  <img src="https://img.shields.io/badge/Machine%20Learning-00D9FF?style=for-the-badge&logo=scikitlearn&logoColor=white">
   <img src="https://img.shields.io/badge/Explainable%20AI-7B61FF?style=for-the-badge">
   <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white">
 </p>
+
+> 🔒 **Portfolio Project — All Rights Reserved**
+>
+> This repository is publicly available for demonstration and evaluation.
+> Please do not reuse or redistribute the source code without permission.
 
 ## 🧠 The Problem
 
@@ -81,11 +86,11 @@ But...
                     │      FastAPI Backend     │
                     │         Python           │
                     ├──────────────────────────┤
-                    │ Prediction API            │
-                    │ Model Selection           │
-                    │ Preprocessing             │
+                    │ Prediction API           │
+                    │ Model Selection          │
+                    │ Preprocessing            │
                     │ SHAP Explanations        │
-                    │ Summary Generation        │
+                    │ Summary Generation       │
                     └────────────┬─────────────┘
                                  │
               ┌──────────────────┼──────────────────┐
@@ -118,7 +123,7 @@ But...
 
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![CSS](https://img.shields.io/badge/CSS-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 
 ### Backend
 
@@ -176,18 +181,18 @@ But...
 
 The model doesn't simply return:
 
-> **Malignant — 56.3%**
+> **Malignant — 56.0%**
 
 It also identifies the features contributing to that prediction.
 
 | Feature | Influence |
 |---|---|
-| Radius | ↑ Malignant |
-| Concavity | ↑ Malignant |
-| Perimeter | ↑ Malignant |
-| Texture | ↓ Lower influence |
+| Mean Concave Points | ↑ Elevated influence |
+| Worst Radius| ↓ Lower influence |
+| Worst Concavity | ↑ Elevated influence |
+| Worst Concave Points | ↓ Elevated influence |
+| Worst Area | ↑ Elevated influence |
 
-If you already have SHAP plots from your notebook, absolutely put them here.
 ---
 
 ## 🔎 SHAP Explainability
@@ -223,13 +228,13 @@ This allows users to understand **why** a prediction was produced instead of see
 
 ## ✨ Feature Gallery
 
-| Malignant/Benign Prediction | Explainability |
-|---|---|
-| ![Hero section prediction dashboard](my-frontend/public/hero-section-prediction.png) | ![Explainability section](my-frontend/public/Explainability.png) |
+| Malignant/Benign Prediction | Explainability | Login/Signup | 
+|---|---|---|
+| ![Hero section prediction dashboard](my-frontend/public/hero-section-prediction.png) | ![Explainability section](my-frontend/public/explainability.png) | ![Login Signup](my-frontend/public/login-signup.png) |
 
-| Model Confidence | Export Diagnostic Reports |
-|---|---|
-| ![Model Confidence section](my-frontend/public/model-confidence.png) | ![Diagnosis Export Report](my-frontend/public/diagnosis-report.png) |
+| Model Confidence | Export Diagnostic Reports | Feature Importance |
+|---|---|---|
+| ![Model Confidence section](my-frontend/public/model-confidence.png) | ![Diagnosis Export Report](my-frontend/public/diagnosis-report.png) | | ![Feature Importance](my-frontend/public/feature-importance.png) |
 
 ---
 
@@ -312,29 +317,37 @@ The trained models and preprocessing components are loaded by the backend when t
 explainable-ai-breast-cancer/
 │
 ├── backend/
+|   ├── _pycache_/
 │   ├── main.py
 │   ├── summary_generator.py
 │   ├── requirements.txt
-│   ├── models/
-│   ├── preprocessing/
+│   ├── models.pkl
+│   ├── preprocessing.npy
 │   └── Dockerfile
 │
 ├── frontend/
+|   ├── .next/
 │   ├── app/
 │   ├── components/
+|   ├── lib/
+|   ├── node_modules/
 │   ├── public/
+|   ├── .env.local
+|   ├── .gitignore
+|   ├── components.json
+|   ├── eslint.config.mjs
+|   ├── next-env.d.ts
+|   ├── next.config.ts
+|   ├── package-lock.json
 │   ├── package.json
+|   ├── postcss.config.mjs
+|   ├── README.md
 │   └── tsconfig.json
 │
-├── notebooks/
-│   └── model_training.ipynb
-│
-├── reports/
+├── docker-compose.yml
 │
 └── README.md
 ~~~
-
-> Adjust this structure to match your actual repository.
 
 ---
 
@@ -405,6 +418,16 @@ Potential future improvements include:
 
 ---
 
+## 📚 Project Resources
+
+🎥 [**Demo Video**](https://youtu.be/Y90TX0RYJr4)
+
+🖼️ [**Project Poster**](my-frontend/public/poster.png)
+
+📄 [**Read Project Documentation**](my-frontend/public/Project_Report.pdf)
+
+---
+
 ## 📜 Disclaimer
 
 This software is an **academic proof-of-concept** developed for educational and research purposes.
@@ -412,14 +435,6 @@ This software is an **academic proof-of-concept** developed for educational and 
 It has not undergone clinical validation, regulatory approval, or formal clinician usability evaluation.
 
 **The predictions and explanations generated by this application must not be used as a substitute for professional medical diagnosis or clinical judgement.**
-
----
-
-## 📚 Project Resources
-
-[![Project Poster](my-frontend/public/poster.png)]
-
-📄 [**Read Project Documentation**](my-frontend/public/Project_Report.pdf)
 
 ---
 
