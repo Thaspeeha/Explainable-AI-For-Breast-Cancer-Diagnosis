@@ -198,7 +198,7 @@ It also identifies the features contributing to that prediction.
 
 | Explainability | Feature Importance |
 |---|---|
-| ![Explainability section](my-frontend/public/explainability.png) | ![Feature Importance](my-frontend/public/feature-importance.png) |
+| ![Explainability section](my-frontend/public/shap-xplainability.png) | ![Feature Importance](my-frontend/public/feature-importance.png) |
 
 | Model Confidence | Export Diagnostic Report |
 |---|---|
