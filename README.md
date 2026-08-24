@@ -28,25 +28,12 @@
 
 `Patient Features → Model → Malignant`
 
-But...
-
-**Why?**
-
----
+**The limitation:**  
+A prediction alone does not explain *why* the model reached that result.
 
 ### Explainable AI
 
-`Patient Features`
-↓
-`ML Model`
-↓
-`Prediction`
-↓
-`SHAP`
-↓
-`Feature Contributions`
-↓
-`Human-readable Explanation`
+This project combines ML predictions with SHAP-based explanations to show the feature contributions behind each prediction.
 
 > ⚠️ **Important:** This is an academic proof-of-concept and is **not intended for clinical diagnosis or medical decision-making**.
 
@@ -183,6 +170,18 @@ The model doesn't simply return:
 
 > **Malignant — 56.0%**
 
+The model doesn't simply return a classification and probability. SHAP identifies the features contributing to the prediction.
+
+### Global Explainability
+
+Global SHAP analysis identifies the features that have the greatest influence across the test dataset.
+
+### Local Explainability
+
+For an individual case, SHAP identifies which features push the prediction toward benign or malignant and which features have the strongest influence.
+
+This allows users to understand **why** a prediction was produced instead of seeing only a classification label.
+
 It also identifies the features contributing to that prediction.
 
 | Feature | Influence |
@@ -195,47 +194,19 @@ It also identifies the features contributing to that prediction.
 
 ---
 
-## 🔎 SHAP Explainability
-
-SHAP is used at two levels.
-
-### Global Explainability
-
-Global SHAP analysis identifies the features that have the greatest influence across the test dataset.
-
-Important feature groups include:
-
-- Cell size
-- Radius
-- Perimeter
-- Area
-- Concavity
-- Concave points
-- Shape irregularity
-
-### Local Explainability
-
-For an individual case, SHAP identifies which features:
-
-- Push the prediction towards **malignant**
-- Push the prediction towards **benign**
-- Contribute strongly to the prediction
-- Create competing signals in borderline cases
-
-This allows users to understand **why** a prediction was produced instead of seeing only a classification label.
-
----
-
 ## ✨ Feature Gallery
 
-| Malignant/Benign Prediction | Explainability | Login/Signup | 
-|---|---|---|
-| ![Hero section prediction dashboard](my-frontend/public/hero-section-prediction.png) | ![Explainability section](my-frontend/public/explainability.png) | ![Login Signup](my-frontend/public/login-signup.png) |
+| Malignant/Benign Prediction | Explainability | 
+|---|---|
+| ![Hero section prediction dashboard](my-frontend/public/hero-section-prediction.png) | ![Explainability section](my-frontend/public/explainability.png) |
 
-| Model Confidence | Export Diagnostic Reports | Feature Importance |
-|---|---|---|
-| ![Model Confidence section](my-frontend/public/model-confidence.png) | ![Diagnosis Export Report](my-frontend/public/diagnosis-report.png) | | ![Feature Importance](my-frontend/public/feature-importance.png) |
+| Model Confidence | Export Diagnostic Reports |
+|---|---|
+| ![Model Confidence section](my-frontend/public/model-confidence.png) | ![Diagnosis Export Report](my-frontend/public/diagnosis-report.png) |
 
+| Login/Signup | Feature Importance |
+|---|---|
+| ![Login Signup](my-frontend/public/login-signup.png) | ![Feature Importance](my-frontend/public/feature-importance.png) |
 ---
 
 ## 🔄 Application Workflow
@@ -282,32 +253,15 @@ Export Diagnosis Report
 
 ## ⚙️ Backend
 
-The backend is implemented as a REST-style FastAPI service.
+The backend is implemented as a REST-style FastAPI service responsible for:
 
-Core functionality includes:
+- Request validation with Pydantic
+- Model loading and preprocessing
+- Predictions using Random Forest, XGBoost and Logistic Regression
+- SHAP-based explanations
+- Human-readable explanation generation
 
-~~~text
-FastAPI
-│
-├── Request Validation
-│   └── Pydantic
-│
-├── Model Loading
-│   └── Joblib
-│
-├── Prediction
-│   ├── Random Forest
-│   ├── XGBoost
-│   └── Logistic Regression
-│
-├── Explainability
-│   └── SHAP
-│
-└── Explanation Summary
-    └── summary_generator
-~~~
-
-The trained models and preprocessing components are loaded by the backend when the application starts.
+The trained models and preprocessing components are loaded when the application starts.
 
 ---
 
@@ -403,18 +357,6 @@ Potential future improvements include:
 **Student:** Thaspeeha Vahithu  
 **Programme:** BSc (Hons) Computer Science  
 **University:** University of West London – RAK Branch
-
----
-
-## 🎯 What I Built
-
-- 🧠 ML model training & evaluation
-- 🔎 SHAP-based explainability
-- ⚙️ FastAPI REST API
-- 🎨 Next.js dashboard
-- 🗄️ MongoDB authentication
-- 🐳 Docker containerization
-- 📄 Automated report generation
 
 ---
 
